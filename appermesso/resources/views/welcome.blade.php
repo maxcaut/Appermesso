@@ -13,7 +13,8 @@
             <div class="ambient ambient-one"></div>
             <div class="ambient ambient-two"></div>
 
-            <form id="permesso-form" class="app-shell">
+            <form id="permesso-form" class="app-shell" method="POST" action="{{ route('pdf.generate') }}">
+                @csrf
                 <header class="hero-panel">
                     <div class="brand-mark" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M7 3.5h7l4 4V20.5H7z"/><path d="M14 3.5v4h4M10 12h5M10 16h5"/></svg>
@@ -100,7 +101,7 @@
 
                 <div class="actions-panel">
                     <div><strong>Il modulo è pronto?</strong><span>Controlla i dati prima di generare il documento.</span></div>
-                    <button type="button" id="generate-pdf" class="primary-button">
+                    <button type="submit" id="generate-pdf" class="primary-button">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
                         Genera PDF
                     </button>
@@ -108,6 +109,7 @@
             </form>
         </main>
 
+        {{--
         <section id="pdf-export" class="pdf-export" aria-hidden="true">
             <table class="pdf-table main-table">
                 <colgroup>
@@ -241,5 +243,6 @@
 
             <div class="date-box">DATA</div>
         </section>
+        --}}
     </body>
 </html>
