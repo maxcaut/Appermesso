@@ -10,8 +10,8 @@
         td { height: 20px; padding: 3px 5px; border: 1px solid #000; vertical-align: top; }
         .header td { height: 54px; vertical-align: middle; }
         .logo { width: 28%; text-align: center; }
-        .logo-crop { height: 44px; overflow: hidden; }
-        .logo img { width: 118px; margin-top: -2px; }
+        .logo-crop { height: 48px; overflow: hidden; text-align: center; }
+        .logo img { display: inline-block; width: 130px; margin-top: -12px; }
         .title { font-size: 15px; font-weight: bold; text-align: center; }
         .user-value { font-size: 9px; font-weight: bold; }
         .section-title { margin: 0; padding: 4px 6px; border: 1px solid #000; background: #dce6f1; font-size: 14px; font-weight: normal; }
