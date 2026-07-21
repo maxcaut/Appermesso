@@ -18,7 +18,7 @@ class PdfController extends Controller
             'livello' => ['nullable', 'string', 'max:50'],
             'qualifica' => ['nullable', 'string', 'max:100'],
             'ente' => ['nullable', 'string', 'max:150'],
-            'causale' => ['nullable', 'array'],
+            'causale' => ['nullable', 'array', 'required_without:causale_presenza'],
             'causale.*' => ['string', 'max:150'],
             'altro_permesso' => ['nullable', 'string', 'max:255'],
             'dalle_ore' => ['nullable', 'array'],
@@ -30,7 +30,7 @@ class PdfController extends Controller
             'al_giorno' => ['nullable', 'array'],
             'al_giorno.*' => ['nullable', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
-            'causale_presenza' => ['nullable', 'array'],
+            'causale_presenza' => ['nullable', 'array', 'required_without:causale'],
             'causale_presenza.*' => ['string', 'max:150'],
             'presenza_dalle_ore' => ['nullable', 'array'],
             'presenza_dalle_ore.*' => ['nullable', 'date_format:H:i'],
@@ -41,6 +41,12 @@ class PdfController extends Controller
             'presenza_motivo' => ['nullable', 'array'],
             'presenza_motivo.*' => ['nullable', 'string', 'max:255'],
         ]);
+
+        foreach (['nome', 'cognome', 'matricola', 'centro_costo', 'livello', 'qualifica', 'ente'] as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = Str::upper($data[$field]);
+            }
+        }
 
         $fileName = Str::slug(trim(($data['cognome'] ?? '').'-'.($data['nome'] ?? '')));
         $fileName = $fileName !== '' ? "richiesta-assenza-{$fileName}.pdf" : 'richiesta-assenza.pdf';

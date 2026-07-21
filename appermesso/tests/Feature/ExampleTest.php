@@ -42,4 +42,35 @@ class ExampleTest extends TestCase
 
         $this->assertStringStartsWith('%PDF-', $response->getContent());
     }
+
+    public function test_pdf_requires_at_least_one_absence_or_presence_cause(): void
+    {
+        $response = $this->from('/')->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+        ]);
+
+        $response->assertRedirect('/')
+            ->assertSessionHasErrors(['causale', 'causale_presenza']);
+    }
+
+    public function test_personal_data_is_uppercased_for_the_pdf_view(): void
+    {
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Màrio',
+            'cognome' => 'Rossi',
+            'matricola' => 'ab123',
+            'centro_costo' => 'Centro nord',
+            'livello' => 'quadro',
+            'qualifica' => 'tecnico',
+            'ente' => 'Unità operativa',
+            'causale' => ['ferie HFEG'],
+        ]);
+
+        $response->assertOk();
+
+        $pdf = $response->getContent();
+        $this->assertStringNotContainsString('Màrio', $pdf);
+        $this->assertStringNotContainsString('Centro nord', $pdf);
+    }
 }

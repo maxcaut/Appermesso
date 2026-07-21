@@ -9,6 +9,16 @@ const addPresenzaButton = document.querySelector('#add-presenza');
 const causaliPresenzaInputs = document.querySelectorAll('input[name="causale_presenza[]"]');
 const causaliPresenzaCount = document.querySelector('#causali-presenza-count');
 
+form?.addEventListener('submit', (event) => {
+    const hasCausaleAssenza = Array.from(causaliInputs).some((input) => input.checked);
+    const hasCausalePresenza = Array.from(causaliPresenzaInputs).some((input) => input.checked);
+
+    if (!hasCausaleAssenza && !hasCausalePresenza) {
+        event.preventDefault();
+        window.alert('Seleziona almeno una causale di assenza o una causale di presenza prima di generare il PDF.');
+    }
+});
+
 const createPeriodoRow = () => {
     const row = document.createElement('div');
     row.className = 'periodo-row';
