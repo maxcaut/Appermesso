@@ -10,8 +10,10 @@
         td { height: 20px; padding: 3px 5px; border: 1px solid #000; vertical-align: top; }
         .header td { height: 54px; vertical-align: middle; }
         .logo { width: 28%; text-align: center; }
-        .logo img { width: 118px; }
+        .logo-crop { height: 44px; overflow: hidden; }
+        .logo img { width: 118px; margin-top: -2px; }
         .title { font-size: 15px; font-weight: bold; text-align: center; }
+        .user-value { font-size: 9px; font-weight: bold; }
         .section-title { margin: 0; padding: 4px 6px; border: 1px solid #000; background: #dce6f1; font-size: 14px; font-weight: normal; }
         .box { display: inline-block; width: 9px; height: 9px; margin-right: 4px; border: 1px solid #000; vertical-align: -1px; }
         .box.checked { background: #000; }
@@ -32,11 +34,11 @@
 
 <table>
     <tr class="header">
-        <td class="logo" colspan="2"><img src="{{ public_path('hitachi-logo.jpg') }}" alt="Hitachi"></td>
+        <td class="logo" colspan="2"><div class="logo-crop"><img src="{{ public_path('hitachi.png') }}" alt="Hitachi"></div></td>
         <td class="title" colspan="5">AUTORIZZAZIONE RICHIESTA PRESENZA / ASSENZA</td>
     </tr>
-    <tr><td>COGNOME</td><td>{{ $value('cognome') }}</td><td>MATRICOLA</td><td>{{ $value('matricola') }}</td><td>LIVELLO</td><td>{{ $value('livello') }}</td><td>ENTE</td></tr>
-    <tr><td>NOME</td><td>{{ $value('nome') }}</td><td>C.TRO DI COSTO</td><td>{{ $value('centro_costo') }}</td><td>QUALIFICA</td><td>{{ $value('qualifica') }}</td><td>{{ $value('ente') }}</td></tr>
+    <tr><td>COGNOME</td><td class="user-value">{{ $value('cognome') }}</td><td>MATRICOLA</td><td class="user-value">{{ $value('matricola') }}</td><td>LIVELLO</td><td class="user-value">{{ $value('livello') }}</td><td>ENTE</td></tr>
+    <tr><td>NOME</td><td class="user-value">{{ $value('nome') }}</td><td>C.TRO DI COSTO</td><td class="user-value">{{ $value('centro_costo') }}</td><td>QUALIFICA</td><td class="user-value">{{ $value('qualifica') }}</td><td class="user-value">{{ $value('ente') }}</td></tr>
 </table>
 
 <h2 class="section-title">CAUSALI ASSENZA</h2>
@@ -57,7 +59,7 @@
         <td><span class="box{{ $checked('conto ore CORF') }}"></span>conto ore CORF</td>
         <td><span class="box{{ $checked('permesso cariche elettive HPUB') }}"></span>cariche elettive HPUB</td>
         <td><span class="box{{ $checked('servizio sindacale HSIN') }}"></span>servizio sindacale HSIN</td>
-        <td rowspan="2"><span class="box{{ $checked('altro permesso') }}"></span>altro permesso (DLG 104): {{ in_array('altro permesso', $causali, true) ? $value('altro_permesso') : '' }}</td>
+        <td rowspan="2"><span class="box{{ $checked('altro permesso') }}"></span>altro permesso (DLG 104): <span class="user-value">{{ in_array('altro permesso', $causali, true) ? $value('altro_permesso') : '' }}</span></td>
     </tr>
     <tr>
         <td><span class="box{{ $checked('permesso a recupero PREC') }}"></span>permesso a recupero PREC</td>
@@ -71,10 +73,10 @@
 <table>
     @for ($index = 0; $index < $periodCount; $index++)
         <tr>
-            <td>Dalle ore {{ $data['dalle_ore'][$index] ?? '' }}</td>
-            <td>del giorno {{ $formatDate($data['dal_giorno'][$index] ?? null) }}</td>
-            <td>alle ore {{ $data['alle_ore'][$index] ?? '' }}</td>
-            <td>del giorno {{ $formatDate($data['al_giorno'][$index] ?? null) }}</td>
+            <td>Dalle ore <span class="user-value">{{ $data['dalle_ore'][$index] ?? '' }}</span></td>
+            <td>del giorno <span class="user-value">{{ $formatDate($data['dal_giorno'][$index] ?? null) }}</span></td>
+            <td>alle ore <span class="user-value">{{ $data['alle_ore'][$index] ?? '' }}</span></td>
+            <td>del giorno <span class="user-value">{{ $formatDate($data['al_giorno'][$index] ?? null) }}</span></td>
         </tr>
     @endfor
 </table>
