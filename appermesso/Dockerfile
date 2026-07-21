@@ -6,13 +6,18 @@ COPY resources ./resources
 COPY vite.config.js ./
 RUN npm run build
 
-FROM php:8.3-cli-alpine AS app
+FROM php:8.3-cli-bookworm AS app
 WORKDIR /var/www/html
 
-RUN apk add --no-cache icu-libs libzip \
-    && apk add --no-cache --virtual .build-deps icu-dev libzip-dev $PHPIZE_DEPS \
-    && docker-php-ext-install intl pdo_sqlite zip \
-    && apk del .build-deps
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libicu-dev \
+        libsqlite3-dev \
+        libzip-dev \
+        unzip \
+    && docker-php-ext-install -j$(nproc) intl pdo_sqlite zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
