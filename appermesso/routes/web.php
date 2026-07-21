@@ -7,4 +7,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/genera-pdf', PdfController::class)->name('pdf.generate');
+Route::post('/genera-pdf', [PdfController::class, '__invoke'])->name('pdf.generate');
