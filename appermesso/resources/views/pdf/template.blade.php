@@ -14,6 +14,8 @@
         .logo img { display: inline-block; width: 130px; margin-top: -12px; }
         .title { font-size: 15px; font-weight: bold; text-align: center; }
         .user-value { font-size: 9px; font-weight: bold; }
+        .presence-reason-label { display: block; white-space: nowrap; }
+        .presence-reason-value { display: block; }
         .section-title { margin: 0; padding: 4px 6px; border: 1px solid #000; background: #dce6f1; font-size: 14px; font-weight: normal; }
         .box { display: inline-block; width: 9px; height: 9px; margin-right: 4px; border: 1px solid #000; vertical-align: -1px; }
         .box.checked { background: #000; }
@@ -98,7 +100,7 @@
             <td>Dalle ore <span class="user-value">{{ $data['presenza_dalle_ore'][$row] ?? '' }}</span></td>
             <td>alle ore <span class="user-value">{{ $data['presenza_alle_ore'][$row] ?? '' }}</span></td>
             <td>del giorno <span class="user-value">{{ $formatDate($data['presenza_giorno'][$row] ?? null) }}</span></td>
-            <td>Motivo/N. Commessa <span class="user-value">{{ $data['presenza_motivo'][$row] ?? '' }}</span></td>
+            <td><span class="presence-reason-label">Motivo/N. Commessa</span><span class="user-value presence-reason-value">{{ $data['presenza_motivo'][$row] ?? '' }}</span></td>
         </tr>
     @endfor
 </table>
