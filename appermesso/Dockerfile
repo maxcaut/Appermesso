@@ -6,16 +6,17 @@ COPY resources ./resources
 COPY vite.config.js ./
 RUN npm run build
 
-FROM php:8.3-cli-bookworm AS app
+FROM php:8.4-cli-bookworm AS app
 WORKDIR /var/www/html
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         libicu-dev \
+        libxml2-dev \
         libsqlite3-dev \
         libzip-dev \
         unzip \
-    && docker-php-ext-install -j$(nproc) intl pdo_sqlite zip \
+    && docker-php-ext-install -j$(nproc) dom intl pdo_sqlite zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
