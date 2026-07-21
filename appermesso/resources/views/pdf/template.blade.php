@@ -20,6 +20,7 @@
         .tall td { height: 37px; }
         .signature td { height: 52px; font-weight: bold; }
         .notes td { height: 34px; }
+        .notes-value { white-space: pre-wrap; }
         .date { width: 150px; margin: 6px 12px 0 auto; padding: 7px; border: 2px solid #000; font-weight: bold; }
     </style>
 </head>
@@ -27,9 +28,12 @@
 @php
     $value = fn (string $key) => $data[$key] ?? '';
     $causali = $data['causale'] ?? [];
+    $causaliPresenza = $data['causale_presenza'] ?? [];
     $checked = fn (string $causale) => in_array($causale, $causali, true) ? ' checked' : '';
     $formatDate = fn ($date) => $date ? \Carbon\Carbon::parse($date)->format('d/m/Y') : '';
     $periodCount = max(3, count($data['dalle_ore'] ?? []));
+    $presenceCount = max(4, count($data['presenza_dalle_ore'] ?? []));
+    $presenceChecked = fn (string $causale) => in_array($causale, $causaliPresenza, true) ? ' checked' : '';
 @endphp
 
 <table>
@@ -81,14 +85,23 @@
     @endfor
 </table>
 
-<table><tr class="notes"><td colspan="2">Note</td></tr><tr class="signature"><td>RICHIEDENTE</td><td>RESPONSABILE UNITÀ ORGANIZZATIVA</td></tr></table>
+<table><tr class="notes"><td colspan="2">Note: <span class="user-value notes-value">{{ $value('note') }}</span></td></tr><tr class="signature"><td>RICHIEDENTE</td><td>RESPONSABILE UNITÀ ORGANIZZATIVA</td></tr></table>
 
 <h2 class="section-title">CAUSALI PRESENZA</h2>
 <table>
-    <tr><td><span class="box"></span>straordinario giornaliero</td><td><span class="box"></span>straordinario fuori sede</td></tr>
-    <tr><td><span class="box"></span>straordinario in giorni festivi o non lavorativi</td><td><span class="box"></span>presenza a recupero</td></tr>
+    <tr><td><span class="box{{ $presenceChecked('straordinario giornaliero') }}"></span>straordinario giornaliero</td><td><span class="box{{ $presenceChecked('straordinario fuori sede') }}"></span>straordinario fuori sede</td></tr>
+    <tr><td><span class="box{{ $presenceChecked('straordinario in giorni festivi o non lavorativi') }}"></span>straordinario in giorni festivi o non lavorativi</td><td><span class="box{{ $presenceChecked('presenza a recupero') }}"></span>presenza a recupero</td></tr>
 </table>
-<table>@for ($row = 0; $row < 4; $row++)<tr><td>Dalle ore</td><td>alle ore</td><td>del giorno</td><td>Motivo/N. Commessa</td></tr>@endfor</table>
+<table>
+    @for ($row = 0; $row < $presenceCount; $row++)
+        <tr>
+            <td>Dalle ore <span class="user-value">{{ $data['presenza_dalle_ore'][$row] ?? '' }}</span></td>
+            <td>alle ore <span class="user-value">{{ $data['presenza_alle_ore'][$row] ?? '' }}</span></td>
+            <td>del giorno <span class="user-value">{{ $formatDate($data['presenza_giorno'][$row] ?? null) }}</span></td>
+            <td>Motivo/N. Commessa <span class="user-value">{{ $data['presenza_motivo'][$row] ?? '' }}</span></td>
+        </tr>
+    @endfor
+</table>
 
 <h2 class="section-title">OMESSA TIMBRATURA</h2>
 <table>

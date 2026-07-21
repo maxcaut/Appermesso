@@ -28,6 +28,12 @@ class ExampleTest extends TestCase
             'dal_giorno' => ['2026-07-21'],
             'alle_ore' => ['17:00'],
             'al_giorno' => ['2026-07-21'],
+            'note' => 'Richiesta concordata con il responsabile.',
+            'causale_presenza' => ['straordinario giornaliero'],
+            'presenza_dalle_ore' => ['18:00'],
+            'presenza_alle_ore' => ['20:00'],
+            'presenza_giorno' => ['2026-07-22'],
+            'presenza_motivo' => ['Commessa 42'],
         ]);
 
         $response->assertOk()

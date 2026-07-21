@@ -99,6 +99,55 @@
                     </div>
                 </section>
 
+                <section class="form-card">
+                    <div class="section-heading">
+                        <span class="step-number">04</span>
+                        <div><h2>Note</h2><p>Aggiungi eventuali informazioni utili alla richiesta di assenza.</p></div>
+                    </div>
+                    <label class="notes-field">
+                        <span>Note</span>
+                        <textarea name="note" rows="4" maxlength="1000" placeholder="Inserisci eventuali note"></textarea>
+                    </label>
+                </section>
+
+                <section class="form-card">
+                    <div class="section-heading">
+                        <span class="step-number">05</span>
+                        <div><h2>Causali di presenza</h2><p>Seleziona una o più causali e indica gli intervalli.</p></div>
+                        <span id="causali-presenza-count" class="selection-count">0 selezionate</span>
+                    </div>
+                    <fieldset class="causali-grid presence-causes-grid">
+                        <legend class="sr-only">Seleziona le causali di presenza</legend>
+                        @foreach ([
+                            ['straordinario giornaliero', 'Straordinario giornaliero'],
+                            ['straordinario fuori sede', 'Straordinario fuori sede'],
+                            ['straordinario in giorni festivi o non lavorativi', 'Straordinario festivo o non lavorativo'],
+                            ['presenza a recupero', 'Presenza a recupero'],
+                        ] as [$value, $label])
+                            <label class="causale-option">
+                                <input type="checkbox" name="causale_presenza[]" value="{{ $value }}">
+                                <span class="custom-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg></span>
+                                <span class="causale-copy"><strong>{{ $label }}</strong></span>
+                            </label>
+                        @endforeach
+                    </fieldset>
+
+                    <div class="section-heading period-heading presence-period-heading">
+                        <div><h3>Periodi di presenza</h3><p>Aggiungi tutti gli intervalli necessari.</p></div>
+                        <button type="button" id="add-presenza" class="secondary-button"><span aria-hidden="true">＋</span> Aggiungi periodo</button>
+                    </div>
+                    <div id="presenze-screen" class="periodi-list">
+                        <div class="periodo-row presenza-row">
+                            <div class="period-index">1</div>
+                            <label><span>Dalle ore</span><input type="time" name="presenza_dalle_ore[]"></label>
+                            <label><span>Alle ore</span><input type="time" name="presenza_alle_ore[]"></label>
+                            <label><span>Giorno</span><input type="date" name="presenza_giorno[]"></label>
+                            <label><span>Motivo / N. commessa</span><input type="text" name="presenza_motivo[]" maxlength="255" placeholder="Motivo o commessa"></label>
+                            <button type="button" class="remove-periodo" aria-label="Rimuovi periodo di presenza">×</button>
+                        </div>
+                    </div>
+                </section>
+
                 <div class="actions-panel">
                     <div><strong>Il modulo è pronto?</strong><span>Controlla i dati prima di generare il documento.</span></div>
                     <button type="submit" id="generate-pdf" class="primary-button">

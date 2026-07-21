@@ -29,6 +29,17 @@ class PdfController extends Controller
             'alle_ore.*' => ['nullable', 'date_format:H:i'],
             'al_giorno' => ['nullable', 'array'],
             'al_giorno.*' => ['nullable', 'date'],
+            'note' => ['nullable', 'string', 'max:1000'],
+            'causale_presenza' => ['nullable', 'array'],
+            'causale_presenza.*' => ['string', 'max:150'],
+            'presenza_dalle_ore' => ['nullable', 'array'],
+            'presenza_dalle_ore.*' => ['nullable', 'date_format:H:i'],
+            'presenza_alle_ore' => ['nullable', 'array'],
+            'presenza_alle_ore.*' => ['nullable', 'date_format:H:i'],
+            'presenza_giorno' => ['nullable', 'array'],
+            'presenza_giorno.*' => ['nullable', 'date'],
+            'presenza_motivo' => ['nullable', 'array'],
+            'presenza_motivo.*' => ['nullable', 'string', 'max:255'],
         ]);
 
         $fileName = Str::slug(trim(($data['cognome'] ?? '').'-'.($data['nome'] ?? '')));
