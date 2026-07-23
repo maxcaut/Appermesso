@@ -37,7 +37,15 @@
                         <label><span>Cognome</span><input type="text" name="cognome" autocomplete="family-name" placeholder="Es. Rossi"></label>
                         <label><span>Matricola</span><input type="text" name="matricola" placeholder="Numero matricola"></label>
                         <label><span>Centro di costo</span><input type="text" name="centro_costo" placeholder="Centro di costo"></label>
-                        <label><span>Livello</span><input type="text" name="livello" placeholder="Livello contrattuale"></label>
+                        <label>
+                            <span>Livello</span>
+                            <select name="livello">
+                                <option value="D2 ex 3 liv.">D2 ex 3 liv.</option>
+                                <option value="C2 ex 4 liv.">C2 ex 4 liv.</option>
+                                <option value="C3 ex 5 liv.">C3 ex 5 liv.</option>
+                                <option value="B1 ex 5S liv.">B1 ex 5S liv.</option>
+                            </select>
+                        </label>
                         <label><span>Qualifica</span><input type="text" name="qualifica" placeholder="Qualifica"></label>
                         <label class="field-span-2"><span>Ente</span><input type="text" name="ente" placeholder="Ente o unità organizzativa"></label>
                     </div>
