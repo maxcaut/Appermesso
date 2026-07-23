@@ -46,7 +46,13 @@
                                 <option value="B1 ex 5S liv.">B1 ex 5S liv.</option>
                             </select>
                         </label>
-                        <label><span>Qualifica</span><input type="text" name="qualifica" placeholder="Qualifica"></label>
+                        <label>
+                            <span>Qualifica</span>
+                            <select name="qualifica">
+                                <option value="Operaio">Operaio</option>
+                                <option value="Impiegato">Impiegato</option>
+                            </select>
+                        </label>
                         <label class="field-span-2"><span>Ente</span><input type="text" name="ente" placeholder="Ente o unità organizzativa"></label>
                     </div>
                 </section>
