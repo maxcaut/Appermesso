@@ -40,10 +40,10 @@
                         <label>
                             <span>Livello</span>
                             <select name="livello">
-                                <option value="D2 ex 3 liv.">D2 ex 3 liv.</option>
-                                <option value="C2 ex 4 liv.">C2 ex 4 liv.</option>
-                                <option value="C3 ex 5 liv.">C3 ex 5 liv.</option>
-                                <option value="B1 ex 5S liv.">B1 ex 5S liv.</option>
+                                <option value="D2">D2 ex 3 liv.</option>
+                                <option value="C2">C2 ex 4 liv.</option>
+                                <option value="C3">C3 ex 5 liv.</option>
+                                <option value="B1">B1 ex 5S liv.</option>
                             </select>
                         </label>
                         <label>
