@@ -33,8 +33,8 @@
                         <div><h2>Dati del richiedente</h2><p>Inserisci le informazioni anagrafiche e aziendali.</p></div>
                     </div>
                     <div class="form-grid">
-                        <label><span>Nome</span><input type="text" name="nome" autocomplete="given-name" placeholder="Es. Mario"></label>
-                        <label><span>Cognome</span><input type="text" name="cognome" autocomplete="family-name" placeholder="Es. Rossi"></label>
+                        <label><span>Nome</span><input type="text" name="nome" autocomplete="given-name" placeholder="Es. Mario" required></label>
+                        <label><span>Cognome</span><input type="text" name="cognome" autocomplete="family-name" placeholder="Es. Rossi" required></label>
                         <label><span>Matricola</span><input type="text" name="matricola" placeholder="Numero matricola"></label>
                         <label><span>Centro di costo</span><input type="text" name="centro_costo" placeholder="Centro di costo"></label>
                         <label>

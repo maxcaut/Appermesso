@@ -28,3 +28,35 @@ Il file `render.yaml` configura un Web Service Docker. Collega il repository a R
 - `APP_KEY` con il risultato locale di `php artisan key:generate --show`.
 
 Se `APP_KEY` non viene fornita, il container ne genera una temporanea all'avvio. Per evitare l'invalidazione delle sessioni a ogni riavvio è consigliato configurarla come variabile segreta persistente.
+
+## Conteggio utilizzi con Supabase
+
+Ogni PDF generato registra in Supabase esclusivamente nome, cognome e data/ora
+dell'utilizzo. Il contenuto del modulo non viene inviato.
+
+1. Crea un progetto Supabase.
+2. Esegui nel SQL Editor il file
+   `supabase/migrations/20260727000000_create_app_usage.sql`.
+3. Configura su Render le variabili segrete:
+
+```dotenv
+SUPABASE_URL=https://<project-ref>.supabase.co
+SUPABASE_SECRET_KEY=<secret-key>
+```
+
+La secret key deve essere configurata solo sul backend e non deve mai essere
+esposta nel codice JavaScript. Se Supabase non è configurato o non è
+temporaneamente raggiungibile, il PDF viene comunque generato.
+
+Il totale degli utilizzi e il dettaglio giornaliero possono essere consultati
+nel SQL Editor:
+
+```sql
+select count(*) as total_usage
+from public.app_usage;
+
+select used_at::date as day, count(*) as usage_count
+from public.app_usage
+group by used_at::date
+order by day desc;
+```

@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -72,5 +74,64 @@ class ExampleTest extends TestCase
         $pdf = $response->getContent();
         $this->assertStringNotContainsString('Màrio', $pdf);
         $this->assertStringNotContainsString('Centro nord', $pdf);
+    }
+
+    public function test_name_and_last_name_are_required(): void
+    {
+        $response = $this->from('/')->post(route('pdf.generate'), [
+            'causale' => ['ferie HFEG'],
+        ]);
+
+        $response->assertRedirect('/')
+            ->assertSessionHasErrors(['nome', 'cognome']);
+    }
+
+    public function test_pdf_usage_is_recorded_in_supabase(): void
+    {
+        config([
+            'services.supabase.url' => 'https://example.supabase.co',
+            'services.supabase.secret_key' => 'test-secret',
+        ]);
+
+        Http::fake([
+            'https://example.supabase.co/rest/v1/app_usage' => Http::response(status: 201),
+        ]);
+
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+            'causale' => ['ferie HFEG'],
+        ]);
+
+        $response->assertOk();
+
+        Http::assertSent(function (Request $request): bool {
+            return $request->url() === 'https://example.supabase.co/rest/v1/app_usage'
+                && $request->hasHeader('apikey', 'test-secret')
+                && $request['first_name'] === 'MARIO'
+                && $request['last_name'] === 'ROSSI'
+                && count($request->data()) === 2;
+        });
+    }
+
+    public function test_supabase_failure_does_not_block_pdf_generation(): void
+    {
+        config([
+            'services.supabase.url' => 'https://example.supabase.co',
+            'services.supabase.secret_key' => 'test-secret',
+        ]);
+
+        Http::fake([
+            'https://example.supabase.co/rest/v1/app_usage' => Http::response(status: 500),
+        ]);
+
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+            'causale' => ['ferie HFEG'],
+        ]);
+
+        $response->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
     }
 }

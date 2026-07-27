@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AppUsageTracker;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PdfController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request, AppUsageTracker $usageTracker)
     {
         $data = $request->validate([
-            'nome' => ['nullable', 'string', 'max:100'],
-            'cognome' => ['nullable', 'string', 'max:100'],
+            'nome' => ['required', 'string', 'max:100'],
+            'cognome' => ['required', 'string', 'max:100'],
             'matricola' => ['nullable', 'string', 'max:50'],
             'centro_costo' => ['nullable', 'string', 'max:100'],
             'livello' => ['nullable', 'string', 'max:50'],
@@ -56,6 +57,8 @@ class PdfController extends Controller
 
         $fileName = Str::slug(trim(($data['cognome'] ?? '').'-'.($data['nome'] ?? '')));
         $fileName = $fileName !== '' ? "richiesta-assenza-{$fileName}.pdf" : 'richiesta-assenza.pdf';
+
+        $usageTracker->recordPdfGenerated($data['nome'], $data['cognome']);
 
         return Pdf::loadView('pdf.template', ['data' => $data])
             ->setPaper('a4')
