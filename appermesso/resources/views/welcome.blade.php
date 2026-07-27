@@ -162,6 +162,24 @@
                     </div>
                 </section>
 
+                <section class="form-card">
+                    <div class="section-heading">
+                        <span class="step-number">06</span>
+                        <div><h2>Omessa timbratura</h2><p>Inserisci i dati della timbratura omessa.</p></div>
+                    </div>
+                    <div class="form-grid">
+                        <label><span>Giorno</span><input type="date" name="omessa_giorno"></label>
+                        <label><span>Ingresso</span><input type="time" name="omessa_ingresso"></label>
+                        <label><span>Uscita</span><input type="time" name="omessa_uscita"></label>
+                        <label><span>Inizio pausa pranzo</span><input type="time" name="omessa_inizio_pausa"></label>
+                        <label><span>Termine pausa pranzo</span><input type="time" name="omessa_termine_pausa"></label>
+                    </div>
+                    <label class="notes-field">
+                        <span>Note</span>
+                        <textarea name="omessa_note" rows="4" maxlength="1000" placeholder="Inserisci eventuali note"></textarea>
+                    </label>
+                </section>
+
                 <div class="actions-panel">
                     <div><strong>Il modulo è pronto?</strong><span>Controlla i dati prima di generare il documento.</span></div>
                     <button type="submit" id="generate-pdf" class="primary-button">

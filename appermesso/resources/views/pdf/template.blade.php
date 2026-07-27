@@ -107,9 +107,17 @@
 
 <h2 class="section-title">OMESSA TIMBRATURA</h2>
 <table>
-    <tr><td>Giorno</td><td>Ingresso h/min.</td><td>Uscita h/min.</td></tr>
-    <tr><td></td><td>Inizio pausa pranzo h/min.</td><td>Termine pausa pranzo h/min.</td></tr>
-    <tr class="tall"><td colspan="3">Note</td></tr>
+    <tr>
+        <td>Giorno <span class="user-value">{{ $formatDate($value('omessa_giorno')) }}</span></td>
+        <td>Ingresso h/min. <span class="user-value">{{ $value('omessa_ingresso') }}</span></td>
+        <td>Uscita h/min. <span class="user-value">{{ $value('omessa_uscita') }}</span></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Inizio pausa pranzo h/min. <span class="user-value">{{ $value('omessa_inizio_pausa') }}</span></td>
+        <td>Termine pausa pranzo h/min. <span class="user-value">{{ $value('omessa_termine_pausa') }}</span></td>
+    </tr>
+    <tr class="tall"><td colspan="3">Note <span class="user-value notes-value">{{ $value('omessa_note') }}</span></td></tr>
     <tr class="signature"><td>RICHIEDENTE</td><td><span class="box"></span>RESPONSABILE DIRETTO</td><td><span class="box"></span>RESPONSABILE U.O.</td></tr>
 </table>
 

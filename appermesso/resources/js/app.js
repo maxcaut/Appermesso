@@ -12,10 +12,12 @@ const causaliPresenzaCount = document.querySelector('#causali-presenza-count');
 form?.addEventListener('submit', (event) => {
     const hasCausaleAssenza = Array.from(causaliInputs).some((input) => input.checked);
     const hasCausalePresenza = Array.from(causaliPresenzaInputs).some((input) => input.checked);
+    const hasOmessaTimbratura = Array.from(form.querySelectorAll('[name^="omessa_"]'))
+        .some((input) => input.value.trim() !== '');
 
-    if (!hasCausaleAssenza && !hasCausalePresenza) {
+    if (!hasCausaleAssenza && !hasCausalePresenza && !hasOmessaTimbratura) {
         event.preventDefault();
-        window.alert('Seleziona almeno una causale di assenza o una causale di presenza prima di generare il PDF.');
+        window.alert('Compila almeno una causale di assenza, una causale di presenza o la sezione omessa timbratura prima di generare il PDF.');
     }
 });
 

@@ -18,7 +18,7 @@ class PdfController extends Controller
             'livello' => ['nullable', 'string', 'max:50'],
             'qualifica' => ['nullable', 'string', 'max:100'],
             'ente' => ['nullable', 'string', 'max:150'],
-            'causale' => ['nullable', 'array', 'required_without:causale_presenza'],
+            'causale' => ['nullable', 'array', 'required_without_all:causale_presenza,omessa_giorno,omessa_ingresso,omessa_uscita,omessa_inizio_pausa,omessa_termine_pausa,omessa_note'],
             'causale.*' => ['string', 'max:150'],
             'altro_permesso' => ['nullable', 'string', 'max:255'],
             'dalle_ore' => ['nullable', 'array'],
@@ -30,7 +30,7 @@ class PdfController extends Controller
             'al_giorno' => ['nullable', 'array'],
             'al_giorno.*' => ['nullable', 'date'],
             'note' => ['nullable', 'string', 'max:1000'],
-            'causale_presenza' => ['nullable', 'array', 'required_without:causale'],
+            'causale_presenza' => ['nullable', 'array', 'required_without_all:causale,omessa_giorno,omessa_ingresso,omessa_uscita,omessa_inizio_pausa,omessa_termine_pausa,omessa_note'],
             'causale_presenza.*' => ['string', 'max:150'],
             'presenza_dalle_ore' => ['nullable', 'array'],
             'presenza_dalle_ore.*' => ['nullable', 'date_format:H:i'],
@@ -40,6 +40,12 @@ class PdfController extends Controller
             'presenza_giorno.*' => ['nullable', 'date'],
             'presenza_motivo' => ['nullable', 'array'],
             'presenza_motivo.*' => ['nullable', 'string', 'max:255'],
+            'omessa_giorno' => ['nullable', 'date'],
+            'omessa_ingresso' => ['nullable', 'date_format:H:i'],
+            'omessa_uscita' => ['nullable', 'date_format:H:i'],
+            'omessa_inizio_pausa' => ['nullable', 'date_format:H:i'],
+            'omessa_termine_pausa' => ['nullable', 'date_format:H:i'],
+            'omessa_note' => ['nullable', 'string', 'max:1000'],
         ]);
 
         foreach (['nome', 'cognome', 'matricola', 'centro_costo', 'livello', 'qualifica', 'ente'] as $field) {
