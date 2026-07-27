@@ -494,9 +494,10 @@ button {
     backdrop-filter: blur(12px);
 }
 
-.actions-panel > div {
+.actions-copy {
     display: grid;
     gap: 3px;
+    flex: 1;
 }
 
 .actions-panel strong {
@@ -507,6 +508,51 @@ button {
 .actions-panel span {
     color: #8490a2;
     font-size: 12px;
+}
+
+.pdf-progress-overlay {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgb(20 45 85 / 30%);
+    backdrop-filter: blur(5px);
+}
+
+.pdf-progress-overlay.is-active {
+    display: flex;
+}
+
+.pdf-progress {
+    position: relative;
+    width: min(420px, 100%);
+    height: 6px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #eaf2ff;
+    box-shadow: 0 12px 30px rgb(20 45 85 / 22%);
+}
+
+.pdf-progress span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 42%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #1c5da8, #2678c9);
+    animation: pdf-progress 1.15s ease-in-out infinite;
+}
+
+@keyframes pdf-progress {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(340%);
+    }
 }
 
 .primary-button {
@@ -524,6 +570,11 @@ button {
     font-size: 13px;
     font-weight: 700;
     transition: transform .18s, box-shadow .18s;
+}
+
+.primary-button:disabled {
+    cursor: wait;
+    opacity: .72;
 }
 
 .primary-button:hover {

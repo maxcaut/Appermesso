@@ -8,8 +8,10 @@ const presenzeScreen = document.querySelector('#presenze-screen');
 const addPresenzaButton = document.querySelector('#add-presenza');
 const causaliPresenzaInputs = document.querySelectorAll('input[name="causale_presenza[]"]');
 const causaliPresenzaCount = document.querySelector('#causali-presenza-count');
+const generatePdfButton = document.querySelector('#generate-pdf');
+const pdfProgress = document.querySelector('#pdf-progress');
 
-form?.addEventListener('submit', (event) => {
+form?.addEventListener('submit', async (event) => {
     const hasCausaleAssenza = Array.from(causaliInputs).some((input) => input.checked);
     const hasCausalePresenza = Array.from(causaliPresenzaInputs).some((input) => input.checked);
     const hasOmessaTimbratura = Array.from(form.querySelectorAll('[name^="omessa_"]'))
@@ -18,6 +20,40 @@ form?.addEventListener('submit', (event) => {
     if (!hasCausaleAssenza && !hasCausalePresenza && !hasOmessaTimbratura) {
         event.preventDefault();
         window.alert('Compila almeno una causale di assenza, una causale di presenza o la sezione omessa timbratura prima di generare il PDF.');
+        return;
+    }
+
+    event.preventDefault();
+    generatePdfButton.disabled = true;
+    pdfProgress.classList.add('is-active');
+    pdfProgress.setAttribute('aria-hidden', 'false');
+
+    try {
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+            headers: {
+                Accept: 'application/pdf',
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('PDF generation failed');
+        }
+
+        const blobUrl = URL.createObjectURL(await response.blob());
+        const disposition = response.headers.get('Content-Disposition') ?? '';
+        const fileName = disposition.match(/filename="?([^";]+)"?/i)?.[1] ?? 'richiesta-assenza.pdf';
+        const downloadLink = document.createElement('a');
+
+        downloadLink.href = blobUrl;
+        downloadLink.download = fileName;
+        downloadLink.click();
+        URL.revokeObjectURL(blobUrl);
+    } finally {
+        generatePdfButton.disabled = false;
+        pdfProgress.classList.remove('is-active');
+        pdfProgress.setAttribute('aria-hidden', 'true');
     }
 });
 

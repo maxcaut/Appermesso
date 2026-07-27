@@ -181,13 +181,22 @@
                 </section>
 
                 <div class="actions-panel">
-                    <div><strong>Il modulo è pronto?</strong><span>Controlla i dati prima di generare il documento.</span></div>
+                    <div class="actions-copy">
+                        <strong>Il modulo è pronto?</strong>
+                        <span>Controlla i dati prima di generare il documento.</span>
+                    </div>
                     <button type="submit" id="generate-pdf" class="primary-button">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
                         Genera PDF
                     </button>
                 </div>
             </form>
+
+            <div id="pdf-progress" class="pdf-progress-overlay" role="progressbar" aria-label="Generazione PDF in corso" aria-hidden="true">
+                <div class="pdf-progress">
+                    <span></span>
+                </div>
+            </div>
         </main>
 
         {{--
