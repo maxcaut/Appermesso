@@ -8,7 +8,10 @@ use Throwable;
 
 class AppUsageTracker
 {
-    public function recordPdfGenerated(string $firstName, string $lastName): void
+    /**
+     * @param  array<int, string>  $usageTypes
+     */
+    public function recordPdfGenerated(string $firstName, string $lastName, array $usageTypes): void
     {
         $url = rtrim((string) config('services.supabase.url'), '/');
         $secretKey = (string) config('services.supabase.secret_key');
@@ -28,6 +31,7 @@ class AppUsageTracker
                 ->post("{$url}/rest/v1/app_usage", [
                     'first_name' => $firstName,
                     'last_name' => $lastName,
+                    'usage_types' => $usageTypes,
                 ])
                 ->throw();
         } catch (Throwable $exception) {

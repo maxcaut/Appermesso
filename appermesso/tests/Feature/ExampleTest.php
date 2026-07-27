@@ -110,8 +110,82 @@ class ExampleTest extends TestCase
                 && $request->hasHeader('apikey', 'test-secret')
                 && $request['first_name'] === 'MARIO'
                 && $request['last_name'] === 'ROSSI'
-                && count($request->data()) === 2;
+                && $request['usage_types'] === ['assenza']
+                && count($request->data()) === 3;
         });
+    }
+
+    public function test_presence_usage_is_recorded_in_supabase(): void
+    {
+        config([
+            'services.supabase.url' => 'https://example.supabase.co',
+            'services.supabase.secret_key' => 'test-secret',
+        ]);
+
+        Http::fake([
+            'https://example.supabase.co/rest/v1/app_usage' => Http::response(status: 201),
+        ]);
+
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+            'causale_presenza' => ['straordinario giornaliero'],
+        ]);
+
+        $response->assertOk();
+
+        Http::assertSent(fn (Request $request): bool => $request['usage_types'] === ['presenza']);
+    }
+
+    public function test_missing_clock_usage_is_recorded_in_supabase(): void
+    {
+        config([
+            'services.supabase.url' => 'https://example.supabase.co',
+            'services.supabase.secret_key' => 'test-secret',
+        ]);
+
+        Http::fake([
+            'https://example.supabase.co/rest/v1/app_usage' => Http::response(status: 201),
+        ]);
+
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+            'omessa_giorno' => '2026-07-27',
+        ]);
+
+        $response->assertOk();
+
+        Http::assertSent(fn (Request $request): bool => $request['usage_types'] === ['omessa_timbratura']);
+    }
+
+    public function test_combined_usage_is_recorded_once_with_all_types(): void
+    {
+        config([
+            'services.supabase.url' => 'https://example.supabase.co',
+            'services.supabase.secret_key' => 'test-secret',
+        ]);
+
+        Http::fake([
+            'https://example.supabase.co/rest/v1/app_usage' => Http::response(status: 201),
+        ]);
+
+        $response = $this->post(route('pdf.generate'), [
+            'nome' => 'Mario',
+            'cognome' => 'Rossi',
+            'causale' => ['ferie HFEG'],
+            'causale_presenza' => ['straordinario giornaliero'],
+            'omessa_giorno' => '2026-07-27',
+        ]);
+
+        $response->assertOk();
+
+        Http::assertSent(fn (Request $request): bool => $request['usage_types'] === [
+            'assenza',
+            'presenza',
+            'omessa_timbratura',
+        ]);
+        Http::assertSentCount(1);
     }
 
     public function test_supabase_failure_does_not_block_pdf_generation(): void

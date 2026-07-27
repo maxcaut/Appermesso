@@ -58,7 +58,28 @@ class PdfController extends Controller
         $fileName = Str::slug(trim(($data['cognome'] ?? '').'-'.($data['nome'] ?? '')));
         $fileName = $fileName !== '' ? "richiesta-assenza-{$fileName}.pdf" : 'richiesta-assenza.pdf';
 
-        $usageTracker->recordPdfGenerated($data['nome'], $data['cognome']);
+        $usageTypes = [];
+
+        if (! empty($data['causale'])) {
+            $usageTypes[] = 'assenza';
+        }
+
+        if (! empty($data['causale_presenza'])) {
+            $usageTypes[] = 'presenza';
+        }
+
+        if (collect($data)->only([
+            'omessa_giorno',
+            'omessa_ingresso',
+            'omessa_uscita',
+            'omessa_inizio_pausa',
+            'omessa_termine_pausa',
+            'omessa_note',
+        ])->filter(fn ($value) => filled($value))->isNotEmpty()) {
+            $usageTypes[] = 'omessa_timbratura';
+        }
+
+        $usageTracker->recordPdfGenerated($data['nome'], $data['cognome'], $usageTypes);
 
         return Pdf::loadView('pdf.template', ['data' => $data])
             ->setPaper('a4')

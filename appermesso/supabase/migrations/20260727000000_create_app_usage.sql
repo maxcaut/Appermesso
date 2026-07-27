@@ -2,6 +2,10 @@ create table public.app_usage (
     id bigint generated always as identity primary key,
     first_name text not null check (char_length(first_name) <= 100),
     last_name text not null check (char_length(last_name) <= 100),
+    usage_types text[] not null check (
+        cardinality(usage_types) > 0
+        and usage_types <@ array['assenza', 'presenza', 'omessa_timbratura']::text[]
+    ),
     used_at timestamptz not null default now()
 );
 
