@@ -10,6 +10,30 @@ const causaliPresenzaInputs = document.querySelectorAll('input[name="causale_pre
 const causaliPresenzaCount = document.querySelector('#causali-presenza-count');
 const generatePdfButton = document.querySelector('#generate-pdf');
 const pdfProgress = document.querySelector('#pdf-progress');
+const privacyConsent = document.querySelector('#privacy-consent');
+const privacyConsentCheckbox = document.querySelector('#privacy-consent-checkbox');
+const privacyAcceptButton = document.querySelector('#privacy-accept');
+const privacyConsentValue = document.querySelector('#privacy-consent-value');
+
+privacyConsentCheckbox?.addEventListener('change', () => {
+    privacyAcceptButton.disabled = !privacyConsentCheckbox.checked;
+});
+
+privacyAcceptButton?.addEventListener('click', () => {
+    if (!privacyConsentCheckbox.checked) {
+        return;
+    }
+
+    privacyConsentValue.value = '1';
+    privacyConsent.remove();
+    document.body.classList.remove('privacy-locked');
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
 
 form?.addEventListener('submit', async (event) => {
     const hasCausaleAssenza = Array.from(causaliInputs).some((input) => input.checked);

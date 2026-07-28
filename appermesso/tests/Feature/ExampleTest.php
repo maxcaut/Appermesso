@@ -22,6 +22,7 @@ class ExampleTest extends TestCase
     public function test_pdf_is_generated_from_submitted_form_data(): void
     {
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'matricola' => '12345',
@@ -48,6 +49,7 @@ class ExampleTest extends TestCase
     public function test_pdf_requires_at_least_one_absence_or_presence_cause(): void
     {
         $response = $this->from('/')->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
         ]);
@@ -59,6 +61,7 @@ class ExampleTest extends TestCase
     public function test_personal_data_is_uppercased_for_the_pdf_view(): void
     {
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Màrio',
             'cognome' => 'Rossi',
             'matricola' => 'ab123',
@@ -79,6 +82,7 @@ class ExampleTest extends TestCase
     public function test_name_and_last_name_are_required(): void
     {
         $response = $this->from('/')->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'causale' => ['ferie HFEG'],
         ]);
 
@@ -98,6 +102,7 @@ class ExampleTest extends TestCase
         ]);
 
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'causale' => ['ferie HFEG'],
@@ -127,6 +132,7 @@ class ExampleTest extends TestCase
         ]);
 
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'causale_presenza' => ['straordinario giornaliero'],
@@ -149,6 +155,7 @@ class ExampleTest extends TestCase
         ]);
 
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'omessa_giorno' => '2026-07-27',
@@ -171,6 +178,7 @@ class ExampleTest extends TestCase
         ]);
 
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'causale' => ['ferie HFEG'],
@@ -200,6 +208,7 @@ class ExampleTest extends TestCase
         ]);
 
         $response = $this->post(route('pdf.generate'), [
+            'privacy_consent' => '1',
             'nome' => 'Mario',
             'cognome' => 'Rossi',
             'causale' => ['ferie HFEG'],

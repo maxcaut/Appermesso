@@ -12,6 +12,7 @@ class PdfController extends Controller
     public function __invoke(Request $request, AppUsageTracker $usageTracker)
     {
         $data = $request->validate([
+            'privacy_consent' => ['accepted'],
             'nome' => ['required', 'string', 'max:100'],
             'cognome' => ['required', 'string', 'max:100'],
             'matricola' => ['nullable', 'string', 'max:50'],
