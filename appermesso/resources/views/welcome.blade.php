@@ -57,8 +57,8 @@
                             <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8ZM5 20a7 7 0 0 1 14 0"/><path d="m17 6 1.5 1.5L21 5"/></svg>
                         </span>
                         <div>
-                            <strong>Compila una volta, ritrova tutto pronto.</strong>
-                            <p><a href="{{ route('register') }}">Registrati</a> per salvare i tuoi dati; se hai già un account, <a href="{{ route('login') }}">accedi</a> e il modulo sarà precompilato.</p>
+                            <strong>La prossima volta, parti già avanti.</strong>
+                            <p><a href="{{ route('register') }}">Crea il tuo account</a> e ritrova i dati già nel modulo. Sei già dei nostri? <a href="{{ route('login') }}">Accedi e salta la parte noiosa.</a></p>
                         </div>
                     </aside>
                 @endunless

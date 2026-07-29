@@ -17,9 +17,9 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200)
-            ->assertSee('Compila una volta, ritrova tutto pronto.')
-            ->assertSee('Registrati')
-            ->assertSee('accedi');
+            ->assertSee('La prossima volta, parti già avanti.')
+            ->assertSee('Crea il tuo account')
+            ->assertSee('Accedi e salta la parte noiosa.');
     }
 
     public function test_pdf_is_generated_from_submitted_form_data(): void

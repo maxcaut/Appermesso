@@ -259,7 +259,8 @@ textarea {
 .guest-account-prompt strong {
     display: block;
     margin-bottom: 3px;
-    font-size: 15px;
+    font-size: 17px;
+    letter-spacing: -.015em;
 }
 
 .guest-account-prompt p {
