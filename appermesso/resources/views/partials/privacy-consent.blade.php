@@ -20,27 +20,44 @@
             <p class="eyebrow">Privacy e protezione dei dati</p>
             <h1 id="privacy-consent-title">Consenso al trattamento dei dati personali</h1>
             <p id="privacy-consent-description">
-                Prima di utilizzare Appermesso, leggi le informazioni sul trattamento dei dati inseriti nel modulo.
+                Prima di utilizzare Appermesso, leggi quali dati vengono trattati e quali vengono memorizzati.
             </p>
         </div>
 
         <div class="privacy-consent-copy">
             <p>
-                I dati personali forniti tramite l’app vengono trattati per compilare e generare il PDF della
-                richiesta di presenza, assenza o omessa timbratura.
+                <strong>Dati memorizzati per ogni PDF generato.</strong>
+                L’app registra nome, cognome, tipologia di utilizzo (assenza, presenza e/o omessa timbratura)
+                e data e ora della generazione.
             </p>
             <p>
-                Quando generi il documento, l’app registra nome, cognome, tipologia di utilizzo e data e ora
-                dell’operazione. Gli altri dati inseriti vengono utilizzati per creare il PDF e non fanno parte
-                di questa registrazione di utilizzo.
+                <strong>Dati memorizzati se crei un account.</strong>
+                Vengono conservati identificativo utente, indirizzo email e credenziali di autenticazione.
+                Se compili il profilo, vengono inoltre salvati nome, cognome, matricola, centro di costo,
+                livello, qualifica ed ente, insieme alle date di creazione e ultimo aggiornamento del profilo.
+                Vengono memorizzate anche la data e l’ora in cui presti il consenso e, durante l’accesso,
+                le informazioni tecniche e i token necessari a mantenere attiva la sessione.
+            </p>
+            <p>
+                <strong>Dati non memorizzati nel registro di utilizzo o nel profilo.</strong>
+                Causali e dettagli di assenza o presenza, periodi, orari, motivi o numero di commessa, note e
+                dati dell’omessa timbratura vengono trattati esclusivamente per generare il PDF richiesto.
+                Il PDF viene inviato direttamente al download e non viene archiviato dall’app.
+            </p>
+            <p>
+                I dati di account, profilo, consenso e utilizzo sono conservati nel servizio Supabase.
+                L’app usa inoltre un cookie tecnico di sessione, indispensabile per autenticazione, sicurezza
+                e funzionamento del servizio; non vengono usati cookie pubblicitari o di profilazione.
             </p>
             <p>
                 @if ($privacyPersistsToProfile ?? false)
-                    Il consenso verrà memorizzato nel tuo profilo e potrai revocarlo in qualsiasi momento dalla
-                    pagina del profilo.
+                    Puoi revocare il consenso in qualsiasi momento dalla pagina del profilo; la revoca termina
+                    la sessione e impedisce di continuare a usare l’app finché non presti nuovamente il consenso.
                 @else
                     Se non presti il consenso, non potrai accedere alle funzionalità dell’app. Per gli utenti non
-                    autenticati questa scelta non viene memorizzata.
+                    autenticati l’accettazione mostrata nell’interfaccia non viene salvata nel profilo; la
+                    generazione del PDF richiede comunque una conferma esplicita e produce il registro di
+                    utilizzo descritto sopra.
                 @endif
             </p>
         </div>

@@ -56,8 +56,12 @@ temporaneamente raggiungibile, il PDF viene comunque generato.
 
 Login, registrazione e profilo sono opzionali: il modulo e la generazione del
 PDF restano disponibili anche in modalità ospite. Gli account usano Supabase
-Auth con email e password; il profilo memorizza esclusivamente i sette campi
-anagrafici già presenti nel modulo.
+Auth e memorizzano identificativo utente, email e credenziali di autenticazione.
+Il profilo memorizza i sette campi del modulo (nome, cognome, matricola, centro
+di costo, livello, qualifica ed ente), le date di creazione e aggiornamento e
+l'eventuale data del consenso privacy. La sessione Laravel conserva inoltre
+temporaneamente identificativo, email e token Supabase necessari
+all'autenticazione.
 
 1. Esegui nel SQL Editor
    `supabase/migrations/20260729000000_create_profiles.sql`.

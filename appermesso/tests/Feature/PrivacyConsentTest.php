@@ -11,6 +11,11 @@ class PrivacyConsentTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('Consenso al trattamento dei dati personali')
+            ->assertSee('Dati memorizzati per ogni PDF generato.')
+            ->assertSee('Dati memorizzati se crei un account.')
+            ->assertSee('matricola, centro di costo')
+            ->assertSee('cookie pubblicitari o di profilazione')
+            ->assertSee('Il PDF viene inviato direttamente al download e non viene archiviato')
             ->assertSee('privacy-consent-checkbox')
             ->assertSee(route('privacy.refused'));
     }
