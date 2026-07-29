@@ -39,6 +39,17 @@ class PrivacyConsentTest extends TestCase
             ->assertOk();
     }
 
+    public function test_guest_sees_policy_again_after_reloading_home(): void
+    {
+        $this->postJson(route('privacy.accept'))
+            ->assertOk();
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('privacy-consent-checkbox')
+            ->assertSee('name="privacy_consent" value=""', false);
+    }
+
     public function test_pdf_generation_requires_explicit_privacy_consent(): void
     {
         $this->post(route('pdf.generate'), [

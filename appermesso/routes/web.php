@@ -29,16 +29,14 @@ Route::get('/', function (
         }
     }
 
-    $guestConsentAccepted = (bool) $request->session()->get('privacy_consent_seen', false);
-
     return view('welcome', [
         'currentUser' => $auth['user'] ?? null,
         'profile' => $profile,
         'privacyConsentAccepted' => $auth === null
-            ? $guestConsentAccepted
+            ? false
             : data_get($profile, 'privacy_consent_at') !== null,
         'requiresPrivacyConsent' => $auth === null
-            ? ! $guestConsentAccepted
+            ? true
             : data_get($profile, 'privacy_consent_at') === null,
     ]);
 })->name('home');
