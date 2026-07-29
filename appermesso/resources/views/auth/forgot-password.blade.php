@@ -6,6 +6,14 @@
 @section('description', 'Inserisci l’email associata al tuo account per ricevere il link di recupero.')
 
 @section('content')
+    <div
+        class="form-message is-success is-hidden"
+        role="status"
+        data-recovery-bridge
+        data-session-url="{{ route('password.session') }}"
+    >
+        Verifica del link di recupero in corso…
+    </div>
     <form method="POST" action="{{ route('password.email') }}" class="account-form" data-loading-form>
         @csrf
         <label>

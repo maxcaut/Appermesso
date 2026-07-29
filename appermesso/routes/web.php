@@ -48,6 +48,9 @@ Route::get('/password/dimenticata', [PasswordController::class, 'request'])->nam
 Route::post('/password/email', [PasswordController::class, 'email'])
     ->middleware('throttle:6,1')
     ->name('password.email');
+Route::post('/password/sessione-recupero', [PasswordController::class, 'session'])
+    ->middleware('throttle:6,1')
+    ->name('password.session');
 Route::get('/password/reimposta', [PasswordController::class, 'reset'])->name('password.reset');
 Route::post('/password/reimposta', [PasswordController::class, 'update'])
     ->middleware(['supabase.auth', 'throttle:6,1'])

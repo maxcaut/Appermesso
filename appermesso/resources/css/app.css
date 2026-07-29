@@ -1147,11 +1147,12 @@ select[aria-invalid="true"] {
     }
 
     .hero-account {
+        order: -1;
         width: 100%;
         flex-wrap: wrap;
-        margin: 8px 0 0;
-        padding-top: 16px;
-        border-top: 1px solid rgb(255 255 255 / 14%);
+        margin: 0 0 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgb(255 255 255 / 14%);
     }
 
     .account-state {

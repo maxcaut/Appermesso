@@ -106,7 +106,7 @@ class SupabaseAccountFlowTest extends TestCase
     public function test_password_recovery_uses_a_non_enumerating_response(): void
     {
         Http::fake([
-            'https://example.supabase.co/auth/v1/recover' => Http::response(status: 500),
+            'https://example.supabase.co/auth/v1/recover*' => Http::response(status: 500),
         ]);
 
         $response = $this->from(route('password.request'))
@@ -117,6 +117,23 @@ class SupabaseAccountFlowTest extends TestCase
                 'status',
                 'Se esiste un account associato, riceverai le istruzioni per reimpostare la password.',
             );
+    }
+
+    public function test_password_recovery_sends_the_local_callback_as_redirect_query_parameter(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/auth/v1/recover*' => Http::response(),
+        ]);
+
+        $this->post(route('password.email'), [
+            'email' => 'mario@example.com',
+        ])->assertRedirect();
+
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
+            && $request->url() === 'https://example.supabase.co/auth/v1/recover'
+                .'?redirect_to='.rawurlencode(route('password.reset'))
+            && $request['email'] === 'mario@example.com'
+            && ! array_key_exists('redirect_to', $request->data()));
     }
 
     public function test_recovery_link_establishes_a_session_and_allows_password_reset(): void
@@ -145,6 +162,33 @@ class SupabaseAccountFlowTest extends TestCase
             && $request->url() === 'https://example.supabase.co/auth/v1/user'
             && $request['password'] === 'new-password123'
             && $request->hasHeader('Authorization', 'Bearer access-token'));
+    }
+
+    public function test_standard_supabase_recovery_fragment_can_establish_the_server_session(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/auth/v1/user' => Http::response([
+                'id' => self::USER_ID,
+                'email' => 'mario@example.com',
+            ]),
+        ]);
+
+        $this->postJson(route('password.session'), [
+            'access_token' => 'recovery-access-token',
+            'refresh_token' => 'recovery-refresh-token',
+            'expires_in' => 3600,
+            'type' => 'recovery',
+        ])->assertOk()
+            ->assertJsonPath('redirect', route('password.reset'))
+            ->assertSessionHas(SupabaseSession::SESSION_KEY.'.password_recovery', true);
+
+        $this->get(route('password.reset'))
+            ->assertOk()
+            ->assertSee('Scegli una nuova password');
+
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'GET'
+            && $request->url() === 'https://example.supabase.co/auth/v1/user'
+            && $request->hasHeader('Authorization', 'Bearer recovery-access-token'));
     }
 
     public function test_normal_authenticated_session_cannot_change_password_through_recovery_endpoint(): void

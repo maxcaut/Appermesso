@@ -15,8 +15,53 @@ const privacyConsentCheckbox = document.querySelector('#privacy-consent-checkbox
 const privacyAcceptButton = document.querySelector('#privacy-accept');
 const privacyConsentValue = document.querySelector('#privacy-consent-value');
 const errorSummary = document.querySelector('[data-error-summary]');
+const recoveryBridge = document.querySelector('[data-recovery-bridge]');
 
 errorSummary?.focus();
+
+if (recoveryBridge && window.location.hash.length > 1) {
+    const recoveryData = new URLSearchParams(window.location.hash.slice(1));
+    const accessToken = recoveryData.get('access_token');
+    const refreshToken = recoveryData.get('refresh_token');
+    const type = recoveryData.get('type');
+
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    if (accessToken && refreshToken && type === 'recovery') {
+        recoveryBridge.classList.remove('is-hidden');
+
+        fetch(recoveryBridge.dataset.sessionUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+            },
+            body: JSON.stringify({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+                expires_at: Number(recoveryData.get('expires_at')) || null,
+                expires_in: Number(recoveryData.get('expires_in')) || null,
+                type,
+            }),
+        })
+            .then(async (response) => {
+                const payload = await response.json();
+
+                if (!response.ok || !payload.redirect) {
+                    throw new Error(payload.message ?? 'Link non valido.');
+                }
+
+                window.location.assign(payload.redirect);
+            })
+            .catch(() => {
+                recoveryBridge.classList.remove('is-success');
+                recoveryBridge.classList.add('is-error');
+                recoveryBridge.textContent = 'Link di recupero non valido o scaduto. Richiedine uno nuovo.';
+            });
+    }
+}
 
 document.querySelectorAll('.password-toggle').forEach((button) => {
     button.addEventListener('click', () => {

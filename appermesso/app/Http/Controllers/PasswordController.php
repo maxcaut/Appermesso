@@ -6,6 +6,7 @@ use App\Http\Requests\UpdatePasswordRequest;
 use App\Services\SupabaseAuthService;
 use App\Services\SupabaseSession;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Throwable;
@@ -38,11 +39,43 @@ class PasswordController extends Controller
         );
     }
 
+    public function session(Request $request, SupabaseSession $session): JsonResponse
+    {
+        $validated = $request->validate([
+            'access_token' => ['required', 'string'],
+            'refresh_token' => ['required', 'string'],
+            'expires_at' => ['nullable', 'integer'],
+            'expires_in' => ['nullable', 'integer'],
+            'type' => ['required', 'in:recovery'],
+        ]);
+
+        try {
+            $session->establish([
+                'access_token' => $validated['access_token'],
+                'refresh_token' => $validated['refresh_token'],
+                'expires_at' => $validated['expires_at'] ?? null,
+                'expires_in' => $validated['expires_in'] ?? 3600,
+            ], passwordRecovery: true);
+        } catch (Throwable) {
+            return response()->json([
+                'message' => 'Link di recupero non valido o scaduto.',
+            ], 422);
+        }
+
+        return response()->json([
+            'redirect' => route('password.reset'),
+        ]);
+    }
+
     public function reset(
         Request $request,
         SupabaseAuthService $auth,
         SupabaseSession $session,
     ): View|RedirectResponse {
+        if ($session->isPasswordRecovery()) {
+            return view('auth.reset-password');
+        }
+
         $tokenHash = $request->query('token_hash');
         $type = $request->query('type');
 

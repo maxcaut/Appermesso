@@ -53,10 +53,10 @@ class SupabaseAuthService
     public function sendPasswordRecovery(string $email, string $redirectTo): void
     {
         $this->request()
-            ->post($this->url('/auth/v1/recover'), [
-                'email' => $email,
-                'redirect_to' => $redirectTo,
-            ])
+            ->post(
+                $this->url('/auth/v1/recover?redirect_to='.rawurlencode($redirectTo)),
+                ['email' => $email],
+            )
             ->throw();
     }
 
