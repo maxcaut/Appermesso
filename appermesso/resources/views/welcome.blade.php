@@ -51,7 +51,22 @@
                     </nav>
                 </header>
 
-                <section class="form-card">
+                <nav class="form-progress" aria-label="Avanzamento compilazione">
+                    <a href="#dati-richiedente" class="progress-step is-current" data-progress-step="details">
+                        <span>1</span>
+                        <strong>Dati</strong>
+                    </a>
+                    <a href="#tipo-richiesta" class="progress-step" data-progress-step="type">
+                        <span>2</span>
+                        <strong>Richiesta</strong>
+                    </a>
+                    <a href="#riepilogo-richiesta" class="progress-step" data-progress-step="review">
+                        <span>3</span>
+                        <strong>Riepilogo</strong>
+                    </a>
+                </nav>
+
+                <section id="dati-richiedente" class="form-card flow-card">
                     <div class="section-heading">
                         <span class="step-number">01</span>
                         <div><h2>Dati del richiedente</h2><p>Inserisci le informazioni anagrafiche e aziendali.</p></div>
@@ -84,9 +99,43 @@
                     @endif
                 </section>
 
-                <section class="form-card">
+                <section id="tipo-richiesta" class="form-card flow-card request-type-card">
                     <div class="section-heading">
                         <span class="step-number">02</span>
+                        <div>
+                            <h2>Cosa vuoi comunicare?</h2>
+                            <p>Scegli una o più tipologie. Vedrai soltanto i campi necessari.</p>
+                        </div>
+                    </div>
+                    <div class="request-type-grid" role="group" aria-label="Tipologie di richiesta">
+                        <button type="button" class="request-type-option" data-request-type="absence" aria-pressed="false">
+                            <span class="request-type-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M7 3v3M17 3v3M4 9h16M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Z"/><path d="m9 14 2 2 4-4"/></svg>
+                            </span>
+                            <span><strong>Assenza</strong><small>Ferie, permessi e altre causali</small></span>
+                            <span class="request-type-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="request-type-option" data-request-type="presence" aria-pressed="false">
+                            <span class="request-type-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M6 16h12"/><path d="m16 12 2 2 3-4"/></svg>
+                            </span>
+                            <span><strong>Presenza</strong><small>Straordinari e recuperi</small></span>
+                            <span class="request-type-check" aria-hidden="true">✓</span>
+                        </button>
+                        <button type="button" class="request-type-option" data-request-type="missing" aria-pressed="false">
+                            <span class="request-type-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2M8 3 5 6"/></svg>
+                            </span>
+                            <span><strong>Omessa timbratura</strong><small>Ingresso, uscita o pausa</small></span>
+                            <span class="request-type-check" aria-hidden="true">✓</span>
+                        </button>
+                    </div>
+                    <p class="request-type-hint" id="request-type-hint">Puoi combinare più tipologie nello stesso PDF.</p>
+                </section>
+
+                <section class="form-card request-detail is-hidden" data-request-detail="absence">
+                    <div class="section-heading">
+                        <span class="detail-icon" aria-hidden="true">A</span>
                         <div><h2>Causali di assenza</h2><p>Puoi selezionare una o più opzioni.</p></div>
                         <span id="causali-count" class="selection-count">0 selezionate</span>
                     </div>
@@ -122,9 +171,9 @@
                     </label>
                 </section>
 
-                <section class="form-card">
+                <section class="form-card request-detail is-hidden" data-request-detail="absence">
                     <div class="section-heading period-heading">
-                        <span class="step-number">03</span>
+                        <span class="detail-icon" aria-hidden="true">A</span>
                         <div><h2>Periodo di assenza</h2><p>Aggiungi tutti gli intervalli necessari.</p></div>
                         <button type="button" id="add-periodo" class="secondary-button"><span aria-hidden="true">＋</span> Aggiungi periodo</button>
                     </div>
@@ -140,9 +189,9 @@
                     </div>
                 </section>
 
-                <section class="form-card">
+                <section class="form-card request-detail is-hidden" data-request-detail="absence">
                     <div class="section-heading">
-                        <span class="step-number">04</span>
+                        <span class="detail-icon" aria-hidden="true">A</span>
                         <div><h2>Note</h2><p>Aggiungi eventuali informazioni utili alla richiesta di assenza.</p></div>
                     </div>
                     <label class="notes-field">
@@ -151,9 +200,9 @@
                     </label>
                 </section>
 
-                <section class="form-card">
+                <section class="form-card request-detail is-hidden" data-request-detail="presence">
                     <div class="section-heading">
-                        <span class="step-number">05</span>
+                        <span class="detail-icon" aria-hidden="true">P</span>
                         <div><h2>Causali di presenza</h2><p>Seleziona una o più causali e indica gli intervalli.</p></div>
                         <span id="causali-presenza-count" class="selection-count">0 selezionate</span>
                     </div>
@@ -189,9 +238,9 @@
                     </div>
                 </section>
 
-                <section class="form-card">
+                <section class="form-card request-detail is-hidden" data-request-detail="missing">
                     <div class="section-heading">
-                        <span class="step-number">06</span>
+                        <span class="detail-icon" aria-hidden="true">T</span>
                         <div><h2>Omessa timbratura</h2><p>Inserisci i dati della timbratura omessa.</p></div>
                     </div>
                     <div class="form-grid">
@@ -207,16 +256,17 @@
                     </label>
                 </section>
 
-                <div class="actions-panel">
+                <div id="riepilogo-richiesta" class="actions-panel">
                     <div class="actions-copy">
-                        <strong>Il modulo è pronto?</strong>
-                        <span>Controlla i dati prima di generare il documento.</span>
+                        <strong id="request-summary-title">Inizia scegliendo la richiesta</strong>
+                        <span id="request-summary">Seleziona assenza, presenza o omessa timbratura.</span>
                     </div>
                     <button type="submit" id="generate-pdf" class="primary-button">
                         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg>
                         Genera PDF
                     </button>
                 </div>
+                <div id="form-inline-error" class="form-inline-error" role="alert" aria-live="assertive" hidden></div>
             </form>
 
             <div id="pdf-progress" class="pdf-progress-overlay" role="progressbar" aria-label="Generazione PDF in corso" aria-hidden="true">

@@ -227,6 +227,8 @@ textarea {
 }
 
 .form-card {
+    min-width: 0;
+    max-width: 100%;
     padding: 30px 34px 34px;
     border: 1px solid #e5eaf2;
     border-radius: 24px;
@@ -236,9 +238,14 @@ textarea {
 
 .section-heading {
     display: flex;
+    min-width: 0;
     align-items: center;
     gap: 14px;
     margin-bottom: 26px;
+}
+
+.section-heading > div {
+    min-width: 0;
 }
 
 .step-number {
@@ -255,6 +262,7 @@ textarea {
 }
 
 .section-heading h2 {
+    overflow-wrap: anywhere;
     margin: 0;
     color: #172033;
     font-size: 19px;
@@ -671,6 +679,7 @@ button {
     position: fixed;
     z-index: 1000;
     display: grid;
+    overflow-x: hidden;
     overflow-y: auto;
     inset: 0;
     place-items: center;
@@ -680,6 +689,8 @@ button {
 }
 
 .privacy-consent-card {
+    min-width: 0;
+    max-width: 100%;
     width: min(680px, 100%);
     padding: 34px;
     border: 1px solid rgb(255 255 255 / 32%);
@@ -709,6 +720,7 @@ button {
 
 .privacy-consent-heading h1,
 .privacy-refused-card h1 {
+    overflow-wrap: anywhere;
     margin: 0;
     color: #172033;
     font-size: clamp(25px, 5vw, 34px);
@@ -733,6 +745,7 @@ button {
 }
 
 .privacy-consent-copy p {
+    overflow-wrap: anywhere;
     margin: 0;
     color: #465268;
     font-size: 13px;
@@ -748,6 +761,11 @@ button {
     font-size: 13px;
     font-weight: 600;
     line-height: 1.5;
+}
+
+.privacy-consent-check > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .privacy-consent-check input {
@@ -947,6 +965,8 @@ button {
 }
 
 .account-card {
+    min-width: 0;
+    max-width: 100%;
     padding: 34px;
     border: 1px solid #e5eaf2;
     border-radius: 26px;
@@ -959,6 +979,7 @@ button {
 }
 
 .account-heading h1 {
+    overflow-wrap: anywhere;
     margin: 0;
     color: #172033;
     font-size: clamp(27px, 5vw, 35px);
@@ -1157,14 +1178,228 @@ select[aria-invalid="true"] {
     color: #a3463d;
 }
 
+.form-progress {
+    position: sticky;
+    z-index: 20;
+    top: 12px;
+    display: grid;
+    overflow: hidden;
+    padding: 6px;
+    border: 1px solid rgb(216 225 237 / 90%);
+    border-radius: 16px;
+    background: rgb(255 255 255 / 92%);
+    box-shadow: 0 10px 30px rgb(30 51 82 / 9%);
+    backdrop-filter: blur(16px);
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.progress-step {
+    display: flex;
+    min-height: 46px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 11px;
+    color: #748198;
+    font-size: 12px;
+    text-decoration: none;
+    transition: background .18s, color .18s;
+}
+
+.progress-step span {
+    display: grid;
+    width: 25px;
+    height: 25px;
+    place-items: center;
+    border-radius: 8px;
+    background: #edf1f6;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.progress-step strong {
+    font-weight: 700;
+}
+
+.progress-step.is-current {
+    background: #edf5ff;
+    color: #1d5fae;
+}
+
+.progress-step.is-current span,
+.progress-step.is-complete span {
+    background: #2466b1;
+    color: #fff;
+}
+
+.flow-card,
+.request-detail,
+.request-type-card,
+.actions-panel {
+    scroll-margin-top: 90px;
+}
+
+.request-type-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.request-type-option {
+    position: relative;
+    display: grid;
+    min-height: 138px;
+    min-width: 0;
+    align-content: start;
+    gap: 13px;
+    padding: 18px;
+    border: 1px solid #dfe6ef;
+    border-radius: 16px;
+    background: #fbfcfe;
+    color: #354158;
+    text-align: left;
+    transition: transform .18s, border-color .18s, background .18s, box-shadow .18s;
+}
+
+.request-type-option:hover,
+.request-type-option:focus-visible {
+    border-color: #8eb6e3;
+    background: #f7faff;
+    box-shadow: 0 8px 22px rgb(32 84 148 / 9%);
+    transform: translateY(-1px);
+}
+
+.request-type-option:focus-visible {
+    outline: 3px solid rgb(74 133 203 / 20%);
+    outline-offset: 2px;
+}
+
+.request-type-option.is-selected {
+    border-color: #5b93d1;
+    background: #eff6ff;
+    box-shadow: inset 0 0 0 1px rgb(36 102 177 / 10%);
+}
+
+.request-type-option > span:nth-child(2) {
+    display: grid;
+    min-width: 0;
+    gap: 5px;
+}
+
+.request-type-option strong {
+    color: #27364e;
+    font-size: 14px;
+}
+
+.request-type-option small {
+    color: #748198;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.request-type-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    place-items: center;
+    border-radius: 12px;
+    background: #eaf2ff;
+    color: #2466b1;
+}
+
+.request-type-icon svg {
+    width: 23px;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+}
+
+.request-type-check {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    border: 1px solid #cdd6e2;
+    border-radius: 50%;
+    background: #fff;
+    color: transparent;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.request-type-option.is-selected .request-type-check {
+    border-color: #2466b1;
+    background: #2466b1;
+    color: #fff;
+}
+
+.request-type-hint {
+    margin: 15px 0 0;
+    color: #748198;
+    font-size: 12px;
+    text-align: center;
+}
+
+.detail-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: #eaf2ff;
+    color: #1d5fae;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.request-detail {
+    animation: reveal-detail .24s ease-out both;
+}
+
+@keyframes reveal-detail {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-inline-error {
+    position: fixed;
+    z-index: 80;
+    right: 20px;
+    bottom: 20px;
+    max-width: min(440px, calc(100% - 40px));
+    padding: 14px 17px;
+    border: 1px solid #efbcb6;
+    border-radius: 13px;
+    background: #fff3f1;
+    box-shadow: 0 15px 45px rgb(87 31 25 / 18%);
+    color: #963d34;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.5;
+}
+
 @media (max-width: 760px) {
     .screen-app {
-        padding: 18px 12px 40px;
+        padding: 12px 10px calc(112px + env(safe-area-inset-bottom));
     }
 
     .hero-panel {
-        align-items: flex-start;
-        padding: 26px 22px;
+        min-height: auto;
+        align-items: center;
+        gap: 13px;
+        padding: 18px;
         border-radius: 20px;
     }
 
@@ -1188,13 +1423,22 @@ select[aria-invalid="true"] {
         min-width: 190px;
     }
 
+    .hero-copy .eyebrow,
+    .hero-copy > p:last-child {
+        display: none;
+    }
+
+    .hero-copy h1 {
+        font-size: 24px;
+        line-height: 1.1;
+    }
+
     .hero-account {
-        order: -1;
         width: 100%;
         flex-wrap: wrap;
-        margin: 0 0 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid rgb(255 255 255 / 14%);
+        margin: 3px 0 0;
+        padding-top: 13px;
+        border-top: 1px solid rgb(255 255 255 / 14%);
     }
 
     .account-state {
@@ -1205,6 +1449,33 @@ select[aria-invalid="true"] {
     .form-card {
         padding: 24px 18px;
         border-radius: 19px;
+    }
+
+    .form-progress {
+        top: 8px;
+        border-radius: 14px;
+    }
+
+    .progress-step {
+        gap: 6px;
+    }
+
+    .request-type-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .request-type-option {
+        min-height: 86px;
+        align-items: center;
+        align-content: center;
+        padding: 15px 50px 15px 15px;
+        grid-template-columns: 42px 1fr;
+    }
+
+    .request-type-check {
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
     }
 
     .form-grid,
@@ -1226,7 +1497,12 @@ select[aria-invalid="true"] {
         display: none;
     }
 
+    .period-heading .detail-icon {
+        display: none;
+    }
+
     .secondary-button {
+        min-height: 44px;
         justify-content: center;
         margin: 4px 0 0;
     }
@@ -1243,16 +1519,84 @@ select[aria-invalid="true"] {
     }
 
     .period-index { left: 14px; }
-    .remove-periodo { right: 14px; }
+    .remove-periodo {
+        right: 14px;
+        width: 44px;
+        height: 44px;
+    }
 
     .actions-panel {
+        position: fixed;
+        z-index: 70;
+        right: 10px;
+        bottom: calc(8px + env(safe-area-inset-bottom));
+        left: 10px;
         align-items: stretch;
-        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 17px;
+        box-shadow: 0 16px 45px rgb(20 45 85 / 20%);
+    }
+
+    .actions-copy {
+        display: none;
     }
 
     .primary-button {
         width: 100%;
         margin-left: 0;
+    }
+
+    .causale-option {
+        min-height: 68px;
+    }
+
+    .causale-copy strong {
+        overflow: visible;
+        font-size: 14px;
+        line-height: 1.35;
+        text-overflow: clip;
+        white-space: normal;
+    }
+
+    .causale-copy small,
+    label > span:not(.custom-check):not(.causale-copy) {
+        font-size: 13px;
+    }
+
+    input,
+    select,
+    textarea {
+        min-height: 50px;
+        font-size: 16px;
+    }
+
+    .selection-count {
+        flex: 0 0 auto;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .section-heading > div {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .section-heading .selection-count {
+        width: calc(100% - 56px);
+        max-width: calc(100% - 56px);
+        margin-left: 56px;
+        text-align: center;
+    }
+
+    .form-inline-error {
+        right: 10px;
+        bottom: calc(86px + env(safe-area-inset-bottom));
+        left: 10px;
+        max-width: none;
     }
 
     .privacy-consent-overlay {
@@ -1273,7 +1617,10 @@ select[aria-invalid="true"] {
 
     .privacy-refuse-button,
     .privacy-accept-button {
+        min-width: 0;
+        max-width: 100%;
         width: 100%;
+        white-space: normal;
     }
 
     .account-page {
@@ -1304,6 +1651,22 @@ select[aria-invalid="true"] {
 
     .privacy-revoke-button {
         width: 100%;
+    }
+}
+
+@media (max-width: 360px) {
+    .progress-step strong {
+        display: none;
+    }
+
+    .hero-copy {
+        min-width: 150px;
+    }
+
+    .hero-account-link {
+        flex: 1;
+        min-height: 44px;
+        text-align: center;
     }
 }
 

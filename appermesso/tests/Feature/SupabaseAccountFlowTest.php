@@ -30,7 +30,12 @@ class SupabaseAccountFlowTest extends TestCase
 
         $this->get(route('home'))
             ->assertOk()
-            ->assertSee('Richiesta di assenza');
+            ->assertSee('Richiesta di assenza')
+            ->assertSee('Cosa vuoi comunicare?')
+            ->assertSee('data-request-type="absence"', false)
+            ->assertSee('data-request-type="presence"', false)
+            ->assertSee('data-request-type="missing"', false)
+            ->assertSee('id="form-inline-error"', false);
 
         $this->post(route('pdf.generate'), [
             'privacy_consent' => '1',

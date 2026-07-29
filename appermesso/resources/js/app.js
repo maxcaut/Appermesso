@@ -17,6 +17,94 @@ const privacyConsentValue = document.querySelector('#privacy-consent-value');
 const privacyConsentError = document.querySelector('#privacy-consent-error');
 const errorSummary = document.querySelector('[data-error-summary]');
 const recoveryBridge = document.querySelector('[data-recovery-bridge]');
+const requestTypeButtons = document.querySelectorAll('[data-request-type]');
+const requestDetails = document.querySelectorAll('[data-request-detail]');
+const requestTypeCard = document.querySelector('#tipo-richiesta');
+const requestSummaryTitle = document.querySelector('#request-summary-title');
+const requestSummary = document.querySelector('#request-summary');
+const formInlineError = document.querySelector('#form-inline-error');
+const progressSteps = document.querySelectorAll('[data-progress-step]');
+
+const requestTypeLabels = {
+    absence: 'Assenza',
+    presence: 'Presenza',
+    missing: 'Omessa timbratura',
+};
+
+const selectedRequestTypes = new Set();
+
+const hideInlineError = () => {
+    if (formInlineError) {
+        formInlineError.hidden = true;
+        formInlineError.textContent = '';
+    }
+};
+
+const showInlineError = (message, target = null) => {
+    if (formInlineError) {
+        formInlineError.textContent = message;
+        formInlineError.hidden = false;
+    }
+
+    target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
+
+const updateRequestFlow = () => {
+    requestTypeButtons.forEach((button) => {
+        const isSelected = selectedRequestTypes.has(button.dataset.requestType);
+        button.classList.toggle('is-selected', isSelected);
+        button.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+    });
+
+    requestDetails.forEach((detail) => {
+        const isActive = selectedRequestTypes.has(detail.dataset.requestDetail);
+        detail.classList.toggle('is-hidden', !isActive);
+        detail.querySelectorAll('input, select, textarea, button').forEach((control) => {
+            control.disabled = !isActive;
+        });
+    });
+
+    const selectedLabels = Array.from(selectedRequestTypes, (type) => requestTypeLabels[type]);
+    const hasDetails = selectedLabels.length > 0;
+    const hasPerson = Boolean(form?.elements.nome?.value.trim() && form?.elements.cognome?.value.trim());
+
+    if (requestSummaryTitle && requestSummary) {
+        requestSummaryTitle.textContent = hasDetails
+            ? `${selectedLabels.length === 1 ? 'Richiesta selezionata' : 'Richieste selezionate'}: ${selectedLabels.join(', ')}`
+            : 'Inizia scegliendo la richiesta';
+        requestSummary.textContent = hasDetails
+            ? 'Controlla i dati e genera il documento.'
+            : 'Seleziona assenza, presenza o omessa timbratura.';
+    }
+
+    progressSteps.forEach((step) => {
+        const key = step.dataset.progressStep;
+        const isComplete = (key === 'details' && hasPerson) || (key === 'type' && hasDetails);
+        step.classList.toggle('is-complete', isComplete);
+        step.classList.toggle('is-current', (key === 'details' && !hasPerson)
+            || (key === 'type' && hasPerson && !hasDetails)
+            || (key === 'review' && hasPerson && hasDetails));
+    });
+};
+
+requestTypeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        const type = button.dataset.requestType;
+
+        if (selectedRequestTypes.has(type)) {
+            selectedRequestTypes.delete(type);
+        } else {
+            selectedRequestTypes.add(type);
+        }
+
+        hideInlineError();
+        updateRequestFlow();
+    });
+});
+
+form?.querySelectorAll('[name="nome"], [name="cognome"]').forEach((input) => {
+    input.addEventListener('input', updateRequestFlow);
+});
 
 errorSummary?.focus();
 
@@ -150,14 +238,41 @@ window.addEventListener('pageshow', (event) => {
 });
 
 form?.addEventListener('submit', async (event) => {
+    hideInlineError();
+
+    if (!form.checkValidity()) {
+        event.preventDefault();
+        form.reportValidity();
+        form.querySelector(':invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+    }
+
+    if (selectedRequestTypes.size === 0) {
+        event.preventDefault();
+        showInlineError('Scegli almeno una tipologia di richiesta prima di generare il PDF.', requestTypeCard);
+        return;
+    }
+
     const hasCausaleAssenza = Array.from(causaliInputs).some((input) => input.checked);
     const hasCausalePresenza = Array.from(causaliPresenzaInputs).some((input) => input.checked);
     const hasOmessaTimbratura = Array.from(form.querySelectorAll('[name^="omessa_"]'))
         .some((input) => input.value.trim() !== '');
 
-    if (!hasCausaleAssenza && !hasCausalePresenza && !hasOmessaTimbratura) {
+    if (selectedRequestTypes.has('absence') && !hasCausaleAssenza) {
         event.preventDefault();
-        window.alert('Compila almeno una causale di assenza, una causale di presenza o la sezione omessa timbratura prima di generare il PDF.');
+        showInlineError('Seleziona almeno una causale di assenza.', document.querySelector('[data-request-detail="absence"]'));
+        return;
+    }
+
+    if (selectedRequestTypes.has('presence') && !hasCausalePresenza) {
+        event.preventDefault();
+        showInlineError('Seleziona almeno una causale di presenza.', document.querySelector('[data-request-detail="presence"]'));
+        return;
+    }
+
+    if (selectedRequestTypes.has('missing') && !hasOmessaTimbratura) {
+        event.preventDefault();
+        showInlineError('Inserisci almeno un dato dell’omessa timbratura.', document.querySelector('[data-request-detail="missing"]'));
         return;
     }
 
@@ -188,6 +303,10 @@ form?.addEventListener('submit', async (event) => {
         downloadLink.download = fileName;
         downloadLink.click();
         URL.revokeObjectURL(blobUrl);
+        requestSummaryTitle.textContent = 'PDF generato correttamente';
+        requestSummary.textContent = 'Il download è stato avviato sul tuo dispositivo.';
+    } catch {
+        showInlineError('Non è stato possibile generare il PDF. Controlla i dati e riprova.');
     } finally {
         generatePdfButton.disabled = false;
         pdfProgress.classList.remove('is-active');
@@ -218,9 +337,11 @@ const updatePeriodoIndexes = () => {
 
 const updateCausaliState = () => {
     const selected = Array.from(causaliInputs).filter((input) => input.checked);
-    causaliCount.textContent = `${selected.length} ${selected.length === 1 ? 'selezionata' : 'selezionate'}`;
+    if (causaliCount) {
+        causaliCount.textContent = `${selected.length} ${selected.length === 1 ? 'selezionata' : 'selezionate'}`;
+    }
     const showOther = selected.some((input) => input.value === 'altro permesso');
-    altroPermessoField.classList.toggle('is-hidden', !showOther);
+    altroPermessoField?.classList.toggle('is-hidden', !showOther);
 };
 
 const createPresenzaRow = () => {
@@ -246,7 +367,9 @@ const updatePresenzaIndexes = () => {
 
 const updateCausaliPresenzaState = () => {
     const selectedCount = Array.from(causaliPresenzaInputs).filter((input) => input.checked).length;
-    causaliPresenzaCount.textContent = `${selectedCount} ${selectedCount === 1 ? 'selezionata' : 'selezionate'}`;
+    if (causaliPresenzaCount) {
+        causaliPresenzaCount.textContent = `${selectedCount} ${selectedCount === 1 ? 'selezionata' : 'selezionate'}`;
+    }
 };
 
 addPeriodoButton?.addEventListener('click', () => {
@@ -283,3 +406,9 @@ presenzeScreen?.addEventListener('click', (event) => {
     button.closest('.presenza-row')?.remove();
     updatePresenzaIndexes();
 });
+
+updatePeriodoIndexes();
+updatePresenzaIndexes();
+updateCausaliState();
+updateCausaliPresenzaState();
+updateRequestFlow();
