@@ -22,6 +22,23 @@ class PrivacyConsentTest extends TestCase
             ->assertSee('Non puoi utilizzare Appermesso');
     }
 
+    public function test_guest_must_accept_policy_before_opening_login(): void
+    {
+        $this->get(route('login'))
+            ->assertRedirect(route('home'));
+
+        $this->postJson(route('privacy.accept'))
+            ->assertOk()
+            ->assertJson([
+                'accepted' => true,
+                'stored' => false,
+            ])
+            ->assertSessionHas('privacy_consent_seen', true);
+
+        $this->get(route('login'))
+            ->assertOk();
+    }
+
     public function test_pdf_generation_requires_explicit_privacy_consent(): void
     {
         $this->post(route('pdf.generate'), [

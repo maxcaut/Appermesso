@@ -32,6 +32,7 @@ class ProfileController extends Controller
             'currentUser' => $auth['user'],
             'profile' => $profile,
             'profileError' => $profileError,
+            'requiresPrivacyConsent' => data_get($profile, 'privacy_consent_at') === null,
         ]);
     }
 

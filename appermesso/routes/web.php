@@ -3,12 +3,18 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\PrivacyConsentController;
 use App\Http\Controllers\ProfileController;
 use App\Services\SupabaseProfileService;
 use App\Services\SupabaseSession;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function (SupabaseSession $session, SupabaseProfileService $profiles) {
+Route::get('/', function (
+    Request $request,
+    SupabaseSession $session,
+    SupabaseProfileService $profiles,
+) {
     $auth = $session->current();
     $profile = [];
 
@@ -23,17 +29,27 @@ Route::get('/', function (SupabaseSession $session, SupabaseProfileService $prof
         }
     }
 
+    $guestConsentAccepted = (bool) $request->session()->get('privacy_consent_seen', false);
+
     return view('welcome', [
         'currentUser' => $auth['user'] ?? null,
         'profile' => $profile,
+        'privacyConsentAccepted' => $auth === null
+            ? $guestConsentAccepted
+            : data_get($profile, 'privacy_consent_at') !== null,
+        'requiresPrivacyConsent' => $auth === null
+            ? ! $guestConsentAccepted
+            : data_get($profile, 'privacy_consent_at') === null,
     ]);
 })->name('home');
 
 Route::view('/privacy/consenso-rifiutato', 'privacy-refused')->name('privacy.refused');
+Route::post('/privacy/consenso', [PrivacyConsentController::class, 'accept'])
+    ->name('privacy.accept');
 
 Route::post('/genera-pdf', [PdfController::class, '__invoke'])->name('pdf.generate');
 
-Route::middleware('guest')->group(function () {
+Route::middleware(['guest', 'privacy.accepted'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:6,1')
@@ -57,6 +73,8 @@ Route::post('/password/reimposta', [PasswordController::class, 'update'])
     ->name('password.update');
 
 Route::middleware('supabase.auth')->group(function () {
+    Route::delete('/privacy/consenso', [PrivacyConsentController::class, 'revoke'])
+        ->name('privacy.revoke');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/profilo', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profilo', [ProfileController::class, 'update'])->name('profile.update');

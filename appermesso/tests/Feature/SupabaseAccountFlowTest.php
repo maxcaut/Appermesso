@@ -51,10 +51,11 @@ class SupabaseAccountFlowTest extends TestCase
             ),
         ]);
 
-        $this->post(route('login.attempt'), [
-            'email' => 'mario@example.com',
-            'password' => 'password123',
-        ])->assertRedirect(route('profile.show'))
+        $this->withSession(['privacy_consent_seen' => true])
+            ->post(route('login.attempt'), [
+                'email' => 'mario@example.com',
+                'password' => 'password123',
+            ])->assertRedirect(route('profile.show'))
             ->assertSessionHas(SupabaseSession::SESSION_KEY.'.user.id', self::USER_ID)
             ->assertSessionHas('supabase_user.email', 'mario@example.com');
 
@@ -71,11 +72,12 @@ class SupabaseAccountFlowTest extends TestCase
             'https://example.supabase.co/auth/v1/signup' => Http::response($this->authPayload()),
         ]);
 
-        $this->post(route('register.store'), [
-            'email' => 'mario@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ])->assertRedirect(route('profile.show'))
+        $this->withSession(['privacy_consent_seen' => true])
+            ->post(route('register.store'), [
+                'email' => 'mario@example.com',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+            ])->assertRedirect(route('profile.show'))
             ->assertSessionHas(SupabaseSession::SESSION_KEY.'.user.id', self::USER_ID);
     }
 
@@ -93,11 +95,12 @@ class SupabaseAccountFlowTest extends TestCase
             ),
         ]);
 
-        $this->post(route('register.store'), [
-            'email' => 'mario@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ])->assertRedirect(route('profile.show'))
+        $this->withSession(['privacy_consent_seen' => true])
+            ->post(route('register.store'), [
+                'email' => 'mario@example.com',
+                'password' => 'password123',
+                'password_confirmation' => 'password123',
+            ])->assertRedirect(route('profile.show'))
             ->assertSessionHas(SupabaseSession::SESSION_KEY.'.user.id', self::USER_ID);
 
         Http::assertSentCount(2);
@@ -292,6 +295,79 @@ class SupabaseAccountFlowTest extends TestCase
             ->assertSee('value="MAT-42"', false)
             ->assertSee('value="CC-10"', false)
             ->assertSee('value="Produzione"', false);
+    }
+
+    public function test_authenticated_user_without_saved_consent_must_accept_it_again(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([
+                [...$this->profile(), 'privacy_consent_at' => null],
+            ]),
+        ]);
+
+        $this->withSession($this->authenticatedSession())
+            ->get(route('profile.show'))
+            ->assertOk()
+            ->assertSee('privacy-consent-checkbox')
+            ->assertSee(route('privacy.accept'));
+    }
+
+    public function test_authenticated_user_can_save_privacy_consent_in_their_profile(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([
+                [...$this->profile(), 'privacy_consent_at' => now()->toIso8601String()],
+            ]),
+        ]);
+
+        $this->withSession($this->authenticatedSession())
+            ->postJson(route('privacy.accept'))
+            ->assertOk()
+            ->assertJson(['accepted' => true]);
+
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
+            && $request->url() === 'https://example.supabase.co/rest/v1/profiles?on_conflict=id'
+            && $request['id'] === self::USER_ID
+            && is_string($request['privacy_consent_at'])
+            && $request->hasHeader('Authorization', 'Bearer access-token'));
+    }
+
+    public function test_authenticated_user_can_revoke_consent_from_the_profile(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([
+                [...$this->profile(), 'privacy_consent_at' => null],
+            ]),
+        ]);
+
+        $this->withSession($this->authenticatedSession())
+            ->delete(route('privacy.revoke'))
+            ->assertRedirect(route('privacy.refused'))
+            ->assertSessionMissing(SupabaseSession::SESSION_KEY);
+
+        Http::assertSent(fn (Request $request): bool => $request->method() === 'POST'
+            && $request->url() === 'https://example.supabase.co/rest/v1/profiles?on_conflict=id'
+            && $request['id'] === self::USER_ID
+            && array_key_exists('privacy_consent_at', $request->data())
+            && $request['privacy_consent_at'] === null);
+    }
+
+    public function test_saved_consent_is_shown_in_profile_and_skips_the_dialog(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([
+                [
+                    ...$this->profile(),
+                    'privacy_consent_at' => '2026-07-29T10:30:00+00:00',
+                ],
+            ]),
+        ]);
+
+        $this->withSession($this->authenticatedSession())
+            ->get(route('profile.show'))
+            ->assertOk()
+            ->assertSee('Revoca consenso')
+            ->assertDontSee('privacy-consent-checkbox');
     }
 
     public function test_logout_clears_local_session_even_when_supabase_is_unavailable(): void

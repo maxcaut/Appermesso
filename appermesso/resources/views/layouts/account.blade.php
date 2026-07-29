@@ -7,7 +7,13 @@
         <title>@yield('title') — Appermesso</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased">
+    <body class="antialiased @if ($requiresPrivacyConsent ?? false) privacy-locked @endif">
+        @if ($requiresPrivacyConsent ?? false)
+            @include('partials.privacy-consent', [
+                'privacyAcceptUrl' => route('privacy.accept'),
+                'privacyPersistsToProfile' => true,
+            ])
+        @endif
         <main class="account-page">
             <div class="ambient ambient-one"></div>
             <div class="ambient ambient-two"></div>

@@ -16,6 +16,7 @@ class SupabaseProfileService
         'livello',
         'qualifica',
         'ente',
+        'privacy_consent_at',
     ];
 
     /**
@@ -46,6 +47,26 @@ class SupabaseProfileService
             ->post($this->url('/rest/v1/profiles?on_conflict=id'), [
                 'id' => $userId,
                 ...array_intersect_key($profile, array_flip(self::FIELDS)),
+            ])
+            ->throw()
+            ->json();
+
+        return is_array($response) && isset($response[0]) ? $response[0] : [];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function updatePrivacyConsent(
+        string $userId,
+        bool $accepted,
+        string $accessToken,
+    ): array {
+        $response = $this->request($accessToken)
+            ->withHeader('Prefer', 'resolution=merge-duplicates,return=representation')
+            ->post($this->url('/rest/v1/profiles?on_conflict=id'), [
+                'id' => $userId,
+                'privacy_consent_at' => $accepted ? now()->toIso8601String() : null,
             ])
             ->throw()
             ->json();

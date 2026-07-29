@@ -14,6 +14,7 @@ const privacyConsent = document.querySelector('#privacy-consent');
 const privacyConsentCheckbox = document.querySelector('#privacy-consent-checkbox');
 const privacyAcceptButton = document.querySelector('#privacy-accept');
 const privacyConsentValue = document.querySelector('#privacy-consent-value');
+const privacyConsentError = document.querySelector('#privacy-consent-error');
 const errorSummary = document.querySelector('[data-error-summary]');
 const recoveryBridge = document.querySelector('[data-recovery-bridge]');
 
@@ -97,12 +98,47 @@ privacyConsentCheckbox?.addEventListener('change', () => {
     privacyAcceptButton.disabled = !privacyConsentCheckbox.checked;
 });
 
-privacyAcceptButton?.addEventListener('click', () => {
+privacyAcceptButton?.addEventListener('click', async () => {
     if (!privacyConsentCheckbox.checked) {
         return;
     }
 
-    privacyConsentValue.value = '1';
+    if (privacyConsent.dataset.acceptUrl) {
+        privacyAcceptButton.disabled = true;
+        privacyAcceptButton.textContent = 'Salvataggio…';
+        privacyConsentError.hidden = true;
+
+        try {
+            const response = await fetch(privacyConsent.dataset.acceptUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    Accept: 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Privacy consent could not be saved');
+            }
+
+            if (privacyConsent.dataset.persistsToProfile === 'true') {
+                window.location.reload();
+                return;
+            }
+        } catch {
+            privacyConsentError.textContent = 'Impossibile memorizzare il consenso. Riprova.';
+            privacyConsentError.hidden = false;
+            privacyAcceptButton.disabled = false;
+            privacyAcceptButton.textContent = 'Accetta e continua';
+            return;
+        }
+    }
+
+    if (privacyConsentValue) {
+        privacyConsentValue.value = '1';
+    }
+
     privacyConsent.remove();
     document.body.classList.remove('privacy-locked');
 });

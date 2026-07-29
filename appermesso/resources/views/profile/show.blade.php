@@ -73,4 +73,18 @@
             <button type="submit" class="logout-button">Esci</button>
         </form>
     </div>
+
+    @if (data_get($profile ?? [], 'privacy_consent_at'))
+        <div class="privacy-profile-setting">
+            <div>
+                <strong>Consenso privacy</strong>
+                <p>Prestato il {{ \Illuminate\Support\Carbon::parse(data_get($profile, 'privacy_consent_at'))->timezone(config('app.timezone'))->format('d/m/Y \a\l\l\e H:i') }}.</p>
+            </div>
+            <form method="POST" action="{{ route('privacy.revoke') }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="privacy-revoke-button">Revoca consenso</button>
+            </form>
+        </div>
+    @endif
 @endsection

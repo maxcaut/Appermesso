@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\RequirePrivacyConsent;
 use App\Http\Middleware\RequireSupabaseAuth;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // al container via HTTP. Fidarsi del proxy preserva lo schema originale.
         $middleware->trustProxies(at: '*');
         $middleware->alias([
+            'privacy.accepted' => RequirePrivacyConsent::class,
             'supabase.auth' => RequireSupabaseAuth::class,
         ]);
     })

@@ -799,6 +799,13 @@ button {
     margin-top: 26px;
 }
 
+.privacy-consent-error {
+    margin: 14px 0 0;
+    color: #a3463d;
+    font-size: 13px;
+    font-weight: 600;
+}
+
 .privacy-refuse-button,
 .privacy-return-button {
     display: inline-flex;
@@ -1095,6 +1102,41 @@ select[aria-invalid="true"] {
     border-top: 1px solid #e8edf4;
 }
 
+.privacy-profile-setting {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    margin-top: 22px;
+    padding: 18px;
+    border: 1px solid #e8edf4;
+    border-radius: 14px;
+    background: #f8faff;
+}
+
+.privacy-profile-setting strong {
+    color: #26354c;
+    font-size: 13px;
+}
+
+.privacy-profile-setting p {
+    margin: 4px 0 0;
+    color: #68758a;
+    font-size: 12px;
+}
+
+.privacy-revoke-button {
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid #e1b5b0;
+    border-radius: 10px;
+    background: #fff;
+    color: #a3463d;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
 .secondary-link,
 .logout-button {
     display: inline-flex;
@@ -1252,6 +1294,15 @@ select[aria-invalid="true"] {
     .profile-actions form,
     .secondary-link,
     .logout-button {
+        width: 100%;
+    }
+
+    .privacy-profile-setting {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .privacy-revoke-button {
         width: 100%;
     }
 }
