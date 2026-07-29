@@ -170,6 +170,62 @@ textarea {
     box-shadow: 0 0 0 4px rgb(103 232 165 / 15%);
 }
 
+.hero-account {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-left: auto;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.guest-state,
+.account-state {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #dbe9fa;
+    font-weight: 600;
+}
+
+.account-state {
+    max-width: 210px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-state-dot {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border-radius: 50%;
+    background: #67e8a5;
+    box-shadow: 0 0 0 4px rgb(103 232 165 / 15%);
+}
+
+.hero-account-link {
+    padding: 9px 12px;
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .18s, border-color .18s;
+}
+
+.hero-account-link:hover,
+.hero-account-link:focus-visible {
+    border-color: rgb(255 255 255 / 42%);
+    background: rgb(255 255 255 / 12%);
+}
+
+.hero-account-link.is-filled {
+    border-color: #fff;
+    background: #fff;
+    color: #173b73;
+}
+
 .form-card {
     padding: 30px 34px 34px;
     border: 1px solid #e5eaf2;
@@ -300,6 +356,19 @@ textarea {
 
 .field-span-2 {
     grid-column: span 2;
+}
+
+.profile-prefill-note,
+.profile-note {
+    margin: 18px 0 0;
+    color: #68758a;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.profile-prefill-note a {
+    color: #1d5fae;
+    font-weight: 700;
 }
 
 .causali-grid {
@@ -812,6 +881,240 @@ button {
     margin: 0;
 }
 
+.account-page {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    overflow: hidden;
+    place-items: center;
+    padding: 36px 20px;
+    background:
+        radial-gradient(circle at 0 0, rgb(218 236 255 / 80%), transparent 32rem),
+        radial-gradient(circle at 100% 70%, rgb(255 229 222 / 65%), transparent 30rem),
+        #f5f7fb;
+}
+
+.account-shell {
+    position: relative;
+    z-index: 1;
+    width: min(620px, 100%);
+}
+
+.account-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+    color: #172033;
+    text-decoration: none;
+}
+
+.account-brand .brand-mark {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #173b73, #2678c9);
+    box-shadow: 0 9px 20px rgb(30 101 179 / 18%);
+}
+
+.account-brand .brand-mark svg {
+    width: 25px;
+}
+
+.account-brand > span:last-child {
+    display: grid;
+    gap: 1px;
+}
+
+.account-brand strong {
+    font-size: 17px;
+}
+
+.account-brand small {
+    color: #78859a;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.account-card {
+    padding: 34px;
+    border: 1px solid #e5eaf2;
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 22px 60px rgb(20 45 85 / 12%);
+}
+
+.account-heading {
+    margin-bottom: 26px;
+}
+
+.account-heading h1 {
+    margin: 0;
+    color: #172033;
+    font-size: clamp(27px, 5vw, 35px);
+    letter-spacing: -.035em;
+}
+
+.account-heading > p:last-child:not(.eyebrow) {
+    margin: 9px 0 0;
+    color: #68758a;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.account-form {
+    display: grid;
+    gap: 18px;
+}
+
+.account-form > label,
+.profile-form label {
+    display: grid;
+    gap: 8px;
+}
+
+.account-submit {
+    width: 100%;
+    margin: 4px 0 0;
+}
+
+.password-field {
+    position: relative;
+    display: block;
+}
+
+.password-field input {
+    padding-right: 76px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    padding: 6px 7px;
+    border-radius: 7px;
+    background: transparent;
+    color: #2764a8;
+    font-size: 11px;
+    font-weight: 700;
+    transform: translateY(-50%);
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+    background: #edf4fd;
+}
+
+.account-form-meta {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -7px;
+}
+
+.account-form a,
+.account-links a {
+    color: #1d5fae;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.account-links {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid #e8edf4;
+    color: #68758a;
+    font-size: 13px;
+    text-align: center;
+}
+
+.account-links p {
+    margin: 0;
+}
+
+.account-links .guest-link {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    border: 1px solid #d7e0eb;
+    border-radius: 10px;
+    color: #465268;
+    text-decoration: none;
+}
+
+.form-message {
+    margin-bottom: 20px;
+    padding: 12px 14px;
+    border: 1px solid;
+    border-radius: 11px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.form-message.is-error {
+    border-color: #f0c5c0;
+    background: #fff3f1;
+    color: #9b3d34;
+}
+
+.form-message.is-success {
+    border-color: #b9dfcc;
+    background: #f0fbf5;
+    color: #28704d;
+}
+
+.field-error {
+    color: #b3443a;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
+    border-color: #cf665c;
+}
+
+.profile-form {
+    gap: 20px;
+}
+
+.profile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 22px;
+    border-top: 1px solid #e8edf4;
+}
+
+.secondary-link,
+.logout-button {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 16px;
+    border: 1px solid #d7e0eb;
+    border-radius: 10px;
+    background: #fff;
+    color: #2764a8;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.logout-button {
+    color: #a3463d;
+}
+
 @media (max-width: 760px) {
     .screen-app {
         padding: 18px 12px 40px;
@@ -832,6 +1135,28 @@ button {
 
     .hero-badge {
         display: none;
+    }
+
+    .hero-panel {
+        flex-wrap: wrap;
+    }
+
+    .hero-copy {
+        flex: 1;
+        min-width: 190px;
+    }
+
+    .hero-account {
+        width: 100%;
+        flex-wrap: wrap;
+        margin: 8px 0 0;
+        padding-top: 16px;
+        border-top: 1px solid rgb(255 255 255 / 14%);
+    }
+
+    .account-state {
+        max-width: 100%;
+        margin-right: auto;
     }
 
     .form-card {
@@ -905,6 +1230,27 @@ button {
 
     .privacy-refuse-button,
     .privacy-accept-button {
+        width: 100%;
+    }
+
+    .account-page {
+        align-items: start;
+        padding: 20px 12px 36px;
+    }
+
+    .account-card {
+        padding: 25px 20px;
+        border-radius: 20px;
+    }
+
+    .profile-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .profile-actions form,
+    .secondary-link,
+    .logout-button {
         width: 100%;
     }
 }

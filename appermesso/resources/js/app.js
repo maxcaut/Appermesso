@@ -14,6 +14,39 @@ const privacyConsent = document.querySelector('#privacy-consent');
 const privacyConsentCheckbox = document.querySelector('#privacy-consent-checkbox');
 const privacyAcceptButton = document.querySelector('#privacy-accept');
 const privacyConsentValue = document.querySelector('#privacy-consent-value');
+const errorSummary = document.querySelector('[data-error-summary]');
+
+errorSummary?.focus();
+
+document.querySelectorAll('.password-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+        const input = button.closest('.password-field')?.querySelector('input');
+
+        if (!input) {
+            return;
+        }
+
+        const showPassword = input.type === 'password';
+        input.type = showPassword ? 'text' : 'password';
+        button.textContent = showPassword ? 'Nascondi' : 'Mostra';
+        button.setAttribute('aria-label', showPassword ? 'Nascondi password' : 'Mostra password');
+        button.setAttribute('aria-pressed', showPassword ? 'true' : 'false');
+    });
+});
+
+document.querySelectorAll('[data-loading-form]').forEach((loadingForm) => {
+    loadingForm.addEventListener('submit', () => {
+        const submitButton = loadingForm.querySelector('button[type="submit"]');
+
+        if (!submitButton || !loadingForm.checkValidity()) {
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = submitButton.dataset.loadingLabel ?? 'Attendi…';
+        submitButton.setAttribute('aria-busy', 'true');
+    });
+});
 
 privacyConsentCheckbox?.addEventListener('change', () => {
     privacyAcceptButton.disabled = !privacyConsentCheckbox.checked;

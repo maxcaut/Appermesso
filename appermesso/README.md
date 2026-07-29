@@ -52,6 +52,48 @@ La secret key deve essere configurata solo sul backend e non deve mai essere
 esposta nel codice JavaScript. Se Supabase non è configurato o non è
 temporaneamente raggiungibile, il PDF viene comunque generato.
 
+## Account e profilo con Supabase Auth
+
+Login, registrazione e profilo sono opzionali: il modulo e la generazione del
+PDF restano disponibili anche in modalità ospite. Gli account usano Supabase
+Auth con email e password; il profilo memorizza esclusivamente i sette campi
+anagrafici già presenti nel modulo.
+
+1. Esegui nel SQL Editor
+   `supabase/migrations/20260729000000_create_profiles.sql`.
+   Se la tabella `profiles` è già presente, esegui anche
+   `supabase/migrations/20260729000100_allow_incomplete_profiles.sql`: consente
+   al trigger di registrazione di creare un profilo incompleto, che verrà poi
+   completato dall'utente nella pagina Profilo.
+2. Configura anche la chiave anon/publishable usata dal backend:
+
+```dotenv
+SUPABASE_ANON_KEY=<anon-or-publishable-key>
+```
+
+La chiave viene usata soltanto dal backend Laravel insieme al token
+dell'utente; le policy RLS consentono a ogni account di accedere esclusivamente
+al proprio profilo. `APP_KEY` deve essere persistente perché protegge anche la
+sessione Laravel che contiene i token Supabase. Mantieni inoltre
+`SESSION_ENCRYPT=true` in ogni ambiente.
+
+Per consentire l'accesso immediatamente dopo la registrazione, disattiva
+**Confirm email** nelle impostazioni Auth di Supabase. Aggiungi inoltre
+`<APP_URL>/password/reimposta` agli URL di redirect consentiti.
+
+Il recupero password server-side richiede che il template email **Reset
+Password** punti al callback con il token hash, perché il fragment del link
+standard non viene inviato al server:
+
+```html
+<a href="{{ .RedirectTo }}?token_hash={{ .TokenHash }}&type=recovery">
+  Reimposta password
+</a>
+```
+
+Laravel verifica il token con Supabase prima di mostrare il form di nuova
+password. Non inserire access token nella query string.
+
 Il totale degli utilizzi e il dettaglio giornaliero possono essere consultati
 nel SQL Editor:
 

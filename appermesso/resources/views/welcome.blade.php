@@ -9,6 +9,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="antialiased privacy-locked">
+        @php
+            $profileValue = fn (string $key) => old($key, data_get($profile ?? [], $key, ''));
+        @endphp
         <div
             id="privacy-consent"
             class="privacy-consent-overlay"
@@ -85,7 +88,19 @@
                         <h1>Richiesta di assenza</h1>
                         <p>Compila i dati, seleziona una o più causali e genera il modulo pronto per la firma.</p>
                     </div>
-                    <div class="hero-badge"><span></span> Modulo digitale</div>
+                    <nav class="hero-account" aria-label="Account">
+                        @if ($currentUser ?? null)
+                            <span class="account-state">
+                                <span class="account-state-dot" aria-hidden="true"></span>
+                                {{ data_get($currentUser, 'email') }}
+                            </span>
+                            <a href="{{ route('profile.show') }}" class="hero-account-link">Profilo</a>
+                        @else
+                            <span class="guest-state">Modalità ospite</span>
+                            <a href="{{ route('login') }}" class="hero-account-link">Accedi</a>
+                            <a href="{{ route('register') }}" class="hero-account-link is-filled">Registrati</a>
+                        @endif
+                    </nav>
                 </header>
 
                 <section class="form-card">
@@ -94,28 +109,31 @@
                         <div><h2>Dati del richiedente</h2><p>Inserisci le informazioni anagrafiche e aziendali.</p></div>
                     </div>
                     <div class="form-grid">
-                        <label><span>Nome</span><input type="text" name="nome" autocomplete="given-name" placeholder="Es. Mario" required></label>
-                        <label><span>Cognome</span><input type="text" name="cognome" autocomplete="family-name" placeholder="Es. Rossi" required></label>
-                        <label><span>Matricola</span><input type="text" name="matricola" placeholder="Numero matricola"></label>
-                        <label><span>Centro di costo</span><input type="text" name="centro_costo" placeholder="Centro di costo"></label>
+                        <label><span>Nome</span><input type="text" name="nome" value="{{ $profileValue('nome') }}" autocomplete="given-name" placeholder="Es. Mario" required></label>
+                        <label><span>Cognome</span><input type="text" name="cognome" value="{{ $profileValue('cognome') }}" autocomplete="family-name" placeholder="Es. Rossi" required></label>
+                        <label><span>Matricola</span><input type="text" name="matricola" value="{{ $profileValue('matricola') }}" placeholder="Numero matricola"></label>
+                        <label><span>Centro di costo</span><input type="text" name="centro_costo" value="{{ $profileValue('centro_costo') }}" placeholder="Centro di costo"></label>
                         <label>
                             <span>Livello</span>
                             <select name="livello">
-                                <option value="D2">D2 ex 3 liv.</option>
-                                <option value="C2">C2 ex 4 liv.</option>
-                                <option value="C3">C3 ex 5 liv.</option>
-                                <option value="B1">B1 ex 5S liv.</option>
+                                <option value="D2" @selected($profileValue('livello') === 'D2')>D2 ex 3 liv.</option>
+                                <option value="C2" @selected($profileValue('livello') === 'C2')>C2 ex 4 liv.</option>
+                                <option value="C3" @selected($profileValue('livello') === 'C3')>C3 ex 5 liv.</option>
+                                <option value="B1" @selected($profileValue('livello') === 'B1')>B1 ex 5S liv.</option>
                             </select>
                         </label>
                         <label>
                             <span>Qualifica</span>
                             <select name="qualifica">
-                                <option value="Operaio">Operaio</option>
-                                <option value="Impiegato">Impiegato</option>
+                                <option value="Operaio" @selected($profileValue('qualifica') === 'Operaio')>Operaio</option>
+                                <option value="Impiegato" @selected($profileValue('qualifica') === 'Impiegato')>Impiegato</option>
                             </select>
                         </label>
-                        <label class="field-span-2"><span>Ente</span><input type="text" name="ente" placeholder="Ente o unità organizzativa"></label>
+                        <label class="field-span-2"><span>Ente</span><input type="text" name="ente" value="{{ $profileValue('ente') }}" placeholder="Ente o unità organizzativa"></label>
                     </div>
+                    @if ($currentUser ?? null)
+                        <p class="profile-prefill-note">Le modifiche qui inserite valgono solo per questo PDF. Puoi aggiornare i dati salvati dal <a href="{{ route('profile.show') }}">profilo</a>.</p>
+                    @endif
                 </section>
 
                 <section class="form-card">
