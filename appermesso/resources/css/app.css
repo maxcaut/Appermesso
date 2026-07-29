@@ -226,6 +226,54 @@ textarea {
     color: #173b73;
 }
 
+.guest-account-prompt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 17px 20px;
+    border: 1px solid #cfe0f5;
+    border-radius: 18px;
+    background: linear-gradient(110deg, #f2f7fd, #fff);
+    color: #173b73;
+    box-shadow: 0 8px 24px rgb(30 71 124 / 6%);
+}
+
+.guest-account-prompt-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: #e0ecfa;
+}
+
+.guest-account-prompt-icon svg {
+    width: 23px;
+    stroke: #245b9c;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+}
+
+.guest-account-prompt strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 15px;
+}
+
+.guest-account-prompt p {
+    margin: 0;
+    color: #526984;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.guest-account-prompt a {
+    color: #174f91;
+    font-weight: 700;
+}
+
 .form-card {
     min-width: 0;
     max-width: 100%;
@@ -1444,6 +1492,11 @@ select[aria-invalid="true"] {
     .account-state {
         max-width: 100%;
         margin-right: auto;
+    }
+
+    .guest-account-prompt {
+        align-items: flex-start;
+        padding: 15px;
     }
 
     .form-card {

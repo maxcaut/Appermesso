@@ -16,7 +16,10 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertSee('Compila una volta, ritrova tutto pronto.')
+            ->assertSee('Registrati')
+            ->assertSee('accedi');
     }
 
     public function test_pdf_is_generated_from_submitted_form_data(): void
