@@ -89,6 +89,7 @@ const updateRequestFlow = () => {
 
 requestTypeButtons.forEach((button) => {
     button.addEventListener('click', () => {
+        const scrollPosition = window.scrollY;
         const type = button.dataset.requestType;
 
         if (selectedRequestTypes.has(type)) {
@@ -99,6 +100,13 @@ requestTypeButtons.forEach((button) => {
 
         hideInlineError();
         updateRequestFlow();
+
+        if (window.matchMedia('(max-width: 760px)').matches) {
+            window.scrollTo(0, scrollPosition);
+            requestAnimationFrame(() => {
+                window.scrollTo(0, scrollPosition);
+            });
+        }
     });
 });
 
