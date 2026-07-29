@@ -49,6 +49,7 @@ class SupabaseAccountFlowTest extends TestCase
             'https://example.supabase.co/auth/v1/token?grant_type=password' => Http::response(
                 $this->authPayload(),
             ),
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([]),
         ]);
 
         $this->withSession(['privacy_consent_seen' => true])
@@ -64,6 +65,40 @@ class SupabaseAccountFlowTest extends TestCase
             && $request['email'] === 'mario@example.com'
             && $request['password'] === 'password123'
             && $request->hasHeader('apikey', 'test-anon-key'));
+    }
+
+    public function test_login_redirects_to_the_form_when_profile_data_already_exists(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/auth/v1/token?grant_type=password' => Http::response(
+                $this->authPayload(),
+            ),
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([
+                $this->profile(),
+            ]),
+        ]);
+
+        $this->withSession(['privacy_consent_seen' => true])
+            ->post(route('login.attempt'), [
+                'email' => 'mario@example.com',
+                'password' => 'password123',
+            ])->assertRedirect(route('home'));
+    }
+
+    public function test_login_redirects_to_profile_on_first_access(): void
+    {
+        Http::fake([
+            'https://example.supabase.co/auth/v1/token?grant_type=password' => Http::response(
+                $this->authPayload(),
+            ),
+            'https://example.supabase.co/rest/v1/profiles*' => Http::response([]),
+        ]);
+
+        $this->withSession(['privacy_consent_seen' => true])
+            ->post(route('login.attempt'), [
+                'email' => 'mario@example.com',
+                'password' => 'password123',
+            ])->assertRedirect(route('profile.show'));
     }
 
     public function test_registration_establishes_a_session_without_requiring_a_second_login(): void

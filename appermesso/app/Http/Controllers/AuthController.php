@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\SupabaseAuthService;
+use App\Services\SupabaseProfileService;
 use App\Services\SupabaseSession;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,7 @@ class AuthController extends Controller
     public function login(
         LoginRequest $request,
         SupabaseAuthService $auth,
+        SupabaseProfileService $profiles,
         SupabaseSession $session,
     ): RedirectResponse {
         try {
@@ -36,7 +38,21 @@ class AuthController extends Controller
                 ->withErrors(['email' => 'Credenziali non valide o servizio temporaneamente non disponibile.']);
         }
 
-        return redirect()->intended(route('profile.show'));
+        $current = $session->current();
+
+        try {
+            $profile = $profiles->find(
+                (string) $current['user']['id'],
+                (string) $current['access_token'],
+            );
+        } catch (Throwable) {
+            $profile = null;
+        }
+
+        $hasProfileData = filled(data_get($profile, 'nome'))
+            && filled(data_get($profile, 'cognome'));
+
+        return redirect()->route($hasProfileData ? 'home' : 'profile.show');
     }
 
     public function showRegister(SupabaseSession $session): View|RedirectResponse
