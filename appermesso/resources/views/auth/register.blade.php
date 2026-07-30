@@ -37,6 +37,6 @@
 
     <div class="account-links">
         <p>Hai già un account? <a href="{{ route('login') }}">Accedi</a></p>
-        <a href="{{ url('/') }}" class="guest-link">Continua come ospite</a>
+        <a href="{{ route('home', ['ospite' => 1]) }}" class="guest-link">Continua come ospite</a>
     </div>
 @endsection

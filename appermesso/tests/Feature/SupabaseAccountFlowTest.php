@@ -334,7 +334,8 @@ class SupabaseAccountFlowTest extends TestCase
             ->assertSee('value="Rossi"', false)
             ->assertSee('value="MAT-42"', false)
             ->assertSee('value="CC-10"', false)
-            ->assertSee('value="Produzione"', false);
+            ->assertSee('value="Produzione"', false)
+            ->assertDontSee('Come vuoi continuare?');
     }
 
     public function test_authenticated_user_without_saved_consent_must_accept_it_again(): void

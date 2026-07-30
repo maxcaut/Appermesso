@@ -724,6 +724,7 @@ button {
     display: none;
 }
 
+.access-choice-overlay,
 .privacy-consent-overlay {
     position: fixed;
     z-index: 1000;
@@ -735,6 +736,130 @@ button {
     padding: 24px;
     background: rgb(12 29 55 / 72%);
     backdrop-filter: blur(12px);
+}
+
+.access-choice-card {
+    min-width: 0;
+    max-width: 100%;
+    width: min(520px, 100%);
+    padding: 34px;
+    border: 1px solid rgb(255 255 255 / 32%);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 28px 80px rgb(5 19 41 / 35%);
+}
+
+.access-choice-brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 26px;
+}
+
+.access-choice-brand .brand-mark {
+    width: 50px;
+    height: 50px;
+    flex-basis: 50px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #173b73, #2678c9);
+    box-shadow: 0 9px 20px rgb(30 101 179 / 18%);
+}
+
+.access-choice-brand .brand-mark svg {
+    width: 26px;
+}
+
+.access-choice-brand > span:last-child {
+    display: grid;
+    gap: 1px;
+}
+
+.access-choice-brand strong {
+    font-size: 18px;
+}
+
+.access-choice-brand small {
+    color: #78859a;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.access-choice-heading h1 {
+    overflow-wrap: anywhere;
+    margin: 0;
+    color: #172033;
+    font-size: clamp(28px, 5vw, 36px);
+    letter-spacing: -.035em;
+}
+
+.access-choice-heading > p:last-child {
+    margin: 10px 0 0;
+    color: #68758a;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.access-choice-actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+.access-choice-actions a {
+    width: 100%;
+    text-decoration: none;
+}
+
+.access-choice-primary,
+.access-choice-secondary,
+.access-choice-guest {
+    display: flex;
+    min-height: 50px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.access-choice-secondary {
+    border: 1px solid #b9cce4;
+    background: #edf4fd;
+    color: #1d5fae;
+    transition: border-color .18s, background .18s;
+}
+
+.access-choice-secondary:hover,
+.access-choice-secondary:focus-visible {
+    border-color: #8eacd1;
+    background: #e4effc;
+}
+
+.access-choice-guest {
+    min-height: 64px;
+    flex-direction: column;
+    gap: 3px;
+    border: 1px solid #d7e0eb;
+    background: #fff;
+    color: #465268;
+    transition: border-color .18s, background .18s;
+}
+
+.access-choice-guest small {
+    color: #7b8799;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.access-choice-guest:hover,
+.access-choice-guest:focus-visible {
+    border-color: #b5c2d3;
+    background: #f7f9fc;
 }
 
 .privacy-consent-card {
@@ -1653,11 +1778,13 @@ select[aria-invalid="true"] {
         max-width: none;
     }
 
+    .access-choice-overlay,
     .privacy-consent-overlay {
         align-items: start;
         padding: 12px;
     }
 
+    .access-choice-card,
     .privacy-consent-card,
     .privacy-refused-card {
         padding: 25px 20px;

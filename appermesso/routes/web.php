@@ -17,6 +17,7 @@ Route::get('/', function (
 ) {
     $auth = $session->current();
     $profile = [];
+    $guestMode = $auth === null && $request->boolean('ospite');
 
     if ($auth !== null) {
         try {
@@ -32,11 +33,12 @@ Route::get('/', function (
     return view('welcome', [
         'currentUser' => $auth['user'] ?? null,
         'profile' => $profile,
+        'showAccessChoice' => $auth === null && ! $guestMode,
         'privacyConsentAccepted' => $auth === null
             ? false
             : data_get($profile, 'privacy_consent_at') !== null,
         'requiresPrivacyConsent' => $auth === null
-            ? true
+            ? $guestMode
             : data_get($profile, 'privacy_consent_at') === null,
     ]);
 })->name('home');
@@ -47,7 +49,7 @@ Route::post('/privacy/consenso', [PrivacyConsentController::class, 'accept'])
 
 Route::post('/genera-pdf', [PdfController::class, '__invoke'])->name('pdf.generate');
 
-Route::middleware(['guest', 'privacy.accepted'])->group(function () {
+Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])
         ->middleware('throttle:6,1')

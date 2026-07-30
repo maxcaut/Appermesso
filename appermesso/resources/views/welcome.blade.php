@@ -9,10 +9,13 @@
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="antialiased @if ($requiresPrivacyConsent) privacy-locked @endif">
+    <body class="antialiased @if ($requiresPrivacyConsent || $showAccessChoice) privacy-locked @endif">
         @php
             $profileValue = fn (string $key) => old($key, data_get($profile ?? [], $key, ''));
         @endphp
+        @if ($showAccessChoice)
+            @include('partials.access-choice')
+        @endif
         @if ($requiresPrivacyConsent)
             @include('partials.privacy-consent', [
                 'privacyAcceptUrl' => route('privacy.accept'),
